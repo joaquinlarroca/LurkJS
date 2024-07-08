@@ -1,0 +1,24 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--app-color-1);
+}
+
+:root {
+    --app-color-1: #0A0403;
+    --app-color-ligth: #f5fbfc;
+    --app-color-2: #D63B27;
+    --app-color-3: #ED523E; 
+    --app-color-4: #3D130D;
+    --app-color-5: #F25C49;
+
+    --loading-bar-height: 10px;
+    --loading-bar-color: var(--app-color-ligth);
+    --loading-screen-background: var(--app-color-1);
+    --loading-bar-done-color: var(--app-color-5);
+
+
+}
