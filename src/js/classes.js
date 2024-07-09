@@ -2,20 +2,19 @@ import { global } from "./main.js";
 
 export class Texture {
     constructor(url) {
-        global._things_to_load_count += 1;
+        global._assets_to_load_count += 1;
         this.element = undefined;
         this.url = url;
         this.loaded = false;
         setTimeout(() => {
             try {
-                const texture = new Image();
-                texture.src = url;
-                texture.onload = () => {
-                    this.element = texture;
+                this.element = new Image();
+                this.element.src = url;
+                this.element.onload = () => {
                     this.loaded = true;
-                    global._things_to_load_done += 1;
+                    global._assets_to_load_done += 1;
                 };
-                texture.onerror = () => {
+                this.element.onerror = () => {
                     new Error("Failed to load texture: " + url);
                 };
 
@@ -27,6 +26,6 @@ export class Texture {
 
     }
 }
-for (let i = 0; i < 10; i++) {
-    new Texture("source/bunny.png");
+for (let i = 0; i < 100; i++) {
+    new Texture("src/bunny.png");
 }
