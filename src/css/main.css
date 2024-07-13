@@ -4,19 +4,20 @@
 }
 
 body {
-    background-color: var(--app-color-1);
+    background-color: var(--body-bg);
 }
 
 :root {
-    --test: #67FF50;
-    --app-color-1: rgb(17, 17, 17);
+    --app-color-1: #171717;
     --app-color-ligth: rgb(238, 238, 238);
     --app-color-2: rgb(214, 59, 39);
     --app-color-3: rgb(237, 82, 62); 
     --app-color-4: rgb(40, 40, 40);
-    --app-color-5: rgb(242, 92, 73);
+    --app-color-5: #A9F249;
 
-    --loading-bar-height: 10px;
+    --body-bg: #000000;
+
+    --loading-bar-height: 15px;
     --loading-bar-color: var(--app-color-ligth);
     --loading-screen-background: var(--app-color-1);
     --loading-bar-done-color: var(--app-color-5);
