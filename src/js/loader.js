@@ -1,7 +1,6 @@
 import { global, screen } from "./main.js"
 const loadingBarColor = screen.css.computedStyles.getPropertyValue('--loading-bar-done-color').trim();
-let loadingBackgroundColor = screen.css.computedStyles.getPropertyValue('--loading-screen-background').trim();
-loadingBackgroundColor = "#000000"
+const loadingBackgroundColor = screen.css.computedStyles.getPropertyValue('--loading-bar-color').trim();
 screen.loading.logo_bg = loadingBackgroundColor
 let load = setInterval(() => {
     var percent = global._assets_to_load_done / global._assets_to_load_count * 100
