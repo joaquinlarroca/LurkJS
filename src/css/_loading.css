@@ -4,24 +4,21 @@
     background-color: var(--loading-screen-background);
     display: flex;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
     transition: 500ms;
 }
 
+#_loading_logo {
+    width: 256px;
+    aspect-ratio: 1 / 1;
+}
+
 #_loading_bar {
-    height: 1.25em;
-    width: 85svw;
-    max-width: 1000px;
-    background-color: var(--loading-bar-color);
-    box-shadow: 0 0 0 0.5em var(--loading-screen-background), 0 0 0 0.9em var(--loading-bar-color);
-    margin-bottom: 10svh;
+    height: 256px;
+    aspect-ratio: 1 / 1;
+    transform: scale(0.75);
 }
 
-#_loading_res_loaded {
-    max-width: 1000px;
-    width: 0;
-    height: 100%;
-    background-color: var(--loading-bar-done-color);
-    transition: width 0.5s;
+#_loading_logo_bg {
+    fill: var(--loading-screen-background);
 }
-
