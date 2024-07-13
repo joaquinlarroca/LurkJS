@@ -14,6 +14,7 @@ export let screen = {
         bar: document.getElementById("_loading_bar"),
         logo: document.getElementById("_loading_logo"),
         logo_bg: document.getElementById("_loading_logo_bg"),
+        indicator: document.getElementById("_loading_indicator"),
     },
     css:{
         root: document.querySelector(":root"),

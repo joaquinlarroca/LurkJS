@@ -5,20 +5,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: 500ms;
+    flex-direction: column;
+    transition: 250ms;
 }
-
-#_loading_logo {
-    width: 256px;
-    aspect-ratio: 1 / 1;
-}
-
 #_loading_bar {
-    height: 256px;
+    height: 128px;
     aspect-ratio: 1 / 1;
-    transform: scale(0.75);
 }
 
 #_loading_logo_bg {
     fill: var(--loading-screen-background);
+}
+#_loading_indicator{
+    font-size: 1.3em;
 }
