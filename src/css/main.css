@@ -5,6 +5,10 @@
 
 body {
     background-color: var(--body-bg);
+    overflow: hidden;
+}
+canvas {
+    background-color: var(--canvas-bg);
 }
 
 :root {
@@ -15,7 +19,8 @@ body {
     --app-color-4: rgb(40, 40, 40);
     --app-color-5: #A9F249;
 
-    --body-bg: #000000;
+    --body-bg: #111111;
+    --canvas-bg: #000000;
 
     --loading-bar-height: 15px;
     --loading-bar-color: var(--body-bg);
