@@ -26,7 +26,7 @@ export let screen = {
     },
     canvas: document.createElement("canvas"),
     context: undefined,
-}
-screen.context = screen.canvas.getContext("2d")
-export let ctx = screen.context
-screen.css.computedStyles = getComputedStyle(screen.css.root)
+};
+screen.context = screen.canvas.getContext("2d");
+export let ctx = screen.context;
+screen.css.computedStyles = getComputedStyle(screen.css.root);

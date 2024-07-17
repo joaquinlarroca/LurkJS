@@ -1,4 +1,5 @@
 #_loading_screen {
+    position: fixed;
     width: 100svw;
     height: 100svh;
     background-color: var(--loading-screen-background);

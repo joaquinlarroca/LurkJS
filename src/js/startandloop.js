@@ -4,8 +4,8 @@ import { waitForLoad } from "./loader.js";
 export async function setup(width, height, marginMultiplier = 1, listeners = true) {
     await waitForLoad();
     if (typeof width == "number" && typeof height == "number" && width > 0 && height > 0) {
-        if (typeof marginMultiplier === 'number' && marginMultiplier > 0 && marginMultiplier < 1) {
-            marginMultiplier = 1
+        if (typeof marginMultiplier === 'number' && marginMultiplier < 0 && marginMultiplier > 1) {
+            marginMultiplier = 1;
         }
         if (!global._started) {
             global._started = true;

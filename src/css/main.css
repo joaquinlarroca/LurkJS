@@ -4,8 +4,13 @@
 }
 
 body {
+    width: 100svw;
+    height: 100svh;
     background-color: var(--body-bg);
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 canvas {
     background-color: var(--canvas-bg);
