@@ -30,3 +30,13 @@ export let screen = {
 screen.context = screen.canvas.getContext("2d");
 export let ctx = screen.context;
 screen.css.computedStyles = getComputedStyle(screen.css.root);
+        indicator: document.getElementById("_loading_indicator"),
+    },
+    css:{
+        root: document.querySelector(":root"),
+        computedStyles: undefined,
+    },
+    canvas: undefined,
+}
+screen.css.computedStyles = getComputedStyle(screen.css.root)
+>>>>>>> d18672557c6e3e3faf4a4250c2529c4010718a0c

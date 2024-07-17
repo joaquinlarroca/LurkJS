@@ -1,6 +1,8 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: monospace;
+    color: var(--app-color-ligth);
 }
 
 body {
@@ -14,6 +16,7 @@ body {
 }
 canvas {
     background-color: var(--canvas-bg);
+    background-color: var(--body-bg);
 }
 
 :root {
@@ -26,11 +29,16 @@ canvas {
 
     --body-bg: #111111;
     --canvas-bg: #000000;
+    --app-color-ligth: #fafafa;
+    --app-color-2: #272727;
+    --app-color-2: #A9F249;
+
+    --body-bg: #101010;
 
     --loading-bar-height: 15px;
     --loading-bar-color: var(--body-bg);
     --loading-screen-background: var(--app-color-1);
-    --loading-bar-done-color: var(--app-color-5);
+    --loading-bar-done-color: var(--app-color-2);
 
 
 }
