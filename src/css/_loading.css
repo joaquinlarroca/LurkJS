@@ -22,17 +22,4 @@
 
 #_loading_logo_bg {
     fill: var(--loading-screen-background);
-    flex-direction: column;
-    transition: 250ms;
-}
-#_loading_bar {
-    height: 128px;
-    aspect-ratio: 1 / 1;
-}
-
-#_loading_logo_bg {
-    fill: var(--loading-screen-background);
-}
-#_loading_indicator{
-    font-size: 1.3em;
 }
