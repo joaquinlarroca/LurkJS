@@ -17,20 +17,16 @@ canvas {
 }
 
 :root {
-    --app-color-1: #171717;
-    --app-color-ligth: rgb(238, 238, 238);
-    --app-color-2: rgb(214, 59, 39);
-    --app-color-3: rgb(237, 82, 62); 
-    --app-color-4: rgb(40, 40, 40);
-    --app-color-5: #A9F249;
+    --background: #171717;
+    --app-color-ligth: #eeeeee;
+    --main: #A9F249;
 
-    --body-bg: #111111;
+    --body-bg: var(--background);
     --canvas-bg: #000000;
 
-    --loading-bar-height: 15px;
-    --loading-bar-color: var(--body-bg);
-    --loading-screen-background: var(--app-color-1);
-    --loading-bar-done-color: var(--app-color-5);
+    --loading-bar-color: #000000;
+    --loading-screen-background: var(--background);
+    --loading-bar-done-color: var(--main);
 
 
 }

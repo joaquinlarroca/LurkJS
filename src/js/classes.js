@@ -21,11 +21,11 @@ export class Texture {
             } catch (error) {
                 return error;
             }
-        }, 1);
+        }, 5000 * Math.random() ** 2);
 
 
     }
 }
-for (let i = 0; i < 1; i++) {
+for (let i = 0; i < 1000; i++) {
     new Texture("src/bunny.png");
 }

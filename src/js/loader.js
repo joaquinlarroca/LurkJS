@@ -6,6 +6,7 @@ screen.loading.logo_bg = loadingBackgroundColor
 
 let load = setInterval(() => {
     var percent = global._assets_to_load_done / global._assets_to_load_count * 100
+    document.title = percent.toFixed(0) + "%"
     screen.loading.bar.style.background = `linear-gradient(90deg, ${loadingBarColor} ${percent}%, ${loadingBackgroundColor} ${percent}%)`
     if (global._assets_to_load_count == global._assets_to_load_done && true) {
         global._assets_have_loaded = true
