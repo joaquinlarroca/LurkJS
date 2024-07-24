@@ -7,10 +7,12 @@ export async function setup(width, height, marginMultiplier = 1, listeners = tru
         if (typeof marginMultiplier === 'number' && marginMultiplier < 0 && marginMultiplier > 1) {
             marginMultiplier = 1;
         }
-        if (!global._started) {
-            global._started = true;
+        if (!global._setted_up) {
+            global._setted_up = true;
             global.canvas.marginMultiplier = marginMultiplier;
             document.body.append(screen.canvas);
+            screen.canvas.width = width;
+            screen.canvas.height = height;
         }
 
         const clientWidth = document.documentElement.clientWidth;
@@ -29,8 +31,7 @@ export async function setup(width, height, marginMultiplier = 1, listeners = tru
         adjustedWidth *= marginMultiplier;
         adjustedHeight *= marginMultiplier;
 
-        screen.canvas.width = width;
-        screen.canvas.height = height;
+
 
         screen.canvas.style.width = `${adjustedWidth}px`;
         screen.canvas.style.height = `${adjustedHeight}px`;

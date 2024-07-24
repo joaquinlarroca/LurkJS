@@ -1,9 +1,10 @@
 export let global = {
-    _assets_to_load_count: 0,
-    _assets_to_load_done: 0,
+    _assetsToLoadCount: 0,
+    _assetsToLoadDone: 0,
     _assets_have_loaded: false,
     _sprites_to_draw: [],
     _started: false,
+    _setted_up: false,
     _loop_started: false,
     _fixed_loop_started: false,
     canvas: {
@@ -29,4 +30,5 @@ export let screen = {
 };
 screen.context = screen.canvas.getContext("2d");
 export let ctx = screen.context;
+export let canvas = screen.canvas;
 screen.css.computedStyles = getComputedStyle(screen.css.root);
