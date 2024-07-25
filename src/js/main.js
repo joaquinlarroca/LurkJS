@@ -10,8 +10,13 @@ export let global = {
     canvas: {
         marginMultiplier: -1,
     },
+    fps: 0,
 }
-
+export let time = {
+    frameCount: 0,
+    deltaTime: 0,
+    time: 0,
+}
 
 export let screen = {
     body: document.body,
