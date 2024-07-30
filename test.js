@@ -1,10 +1,11 @@
 import { global, screen, ctx, canvas, setup, Object, loadImage } from "./src/js/index.js";
 import { time } from "./src/js/main.js";
 import { keyPressed } from "./src/js/listeners.js";
+import { image } from "./src/js/main.js";
 
-let a = new Object([0, 0], [128, 128])
-a.texture = await loadImage("src/bunny.png");
-await setup(1000, 1000, 1, false);
+await loadImage("src/bunny.png")
+let a = new Object(image["src/bunny.png"], [0, 0], [128, 128])
+await setup(1000, 1000, 0.95, false);
 window.addEventListener("started", () => {
     // start
 })
@@ -28,7 +29,4 @@ window.addEventListener("update", () => {
     if (keyPressed("w")) {
         a.y -= 5
     }
-})
-window.addEventListener("resize", () => {
-    setup(screen.canvas.width, screen.canvas.height, global.canvas.marginMultiplier);
 })

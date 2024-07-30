@@ -12,6 +12,9 @@ export let global = {
     },
     fps: 0,
 }
+export let image = {
+    
+}
 export let time = {
     frameCount: 0,
     deltaTime: 0,

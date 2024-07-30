@@ -1,8 +1,8 @@
 import { global, screen } from "./main.js";
 
 export class Object {
-    constructor([x, y], [width, height]) {
-        this.texture = undefined
+    constructor(texture, [x, y], [width, height]) {
+        this.texture = texture
         this.x = x
         this.y = y
         this.offset = [0, 0]

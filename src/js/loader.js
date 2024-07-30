@@ -1,4 +1,4 @@
-import { global, screen } from "./main.js"
+import { global, image, screen } from "./main.js"
 
 const loadingBarColor = screen.css.computedStyles.getPropertyValue('--loading-bar-done-color').trim() ?? "#A9F249";
 const loadingBackgroundColor = screen.css.computedStyles.getPropertyValue('--loading-bar-color').trim() ?? "#000000";
@@ -41,11 +41,9 @@ export async function waitForLoad() {
 export async function loadImage(url) {
     global._assetsToLoadCount += 1;
     let imageElement;
-
     try {
         imageElement = new Image();
         imageElement.src = url;
-
         await new Promise((resolve, reject) => {
             imageElement.onload = () => {
                 setTimeout(() => {
@@ -61,6 +59,6 @@ export async function loadImage(url) {
     } catch (error) {
         throw error;
     }
-
+    image[url] = imageElement
     return imageElement;
 }
