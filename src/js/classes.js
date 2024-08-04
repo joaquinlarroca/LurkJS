@@ -1,4 +1,4 @@
-import { global, screen } from "./main.js";
+import { canvas, global, screen } from "./main.js";
 
 export class Object {
     constructor(texture, [x, y], [width, height]) {
@@ -59,5 +59,31 @@ export class Object {
         screen.context.fill();
 
         screen.context.restore();
+    }
+}
+export class camera {
+    constructor(x, y, w, h) {
+        this.x = x
+        this.y = y
+        this.width = w
+        this.height = h
+        this.viewport = {
+            x: 0,
+            y: 0,
+            width: 1000,
+            height: 1000
+        }
+        this.snapshot = undefined
+    }
+    crop() {
+        this.snapshot = canvas
+    }
+    draw() {
+        screen.context.drawImage(this.snapshot, this.viewport.x, this.viewport.y, this.viewport.width, this.viewport.height, this.x, this.y, this.width, this.height)
+    }
+    drawcropArea(){
+        //draw the area
+        screen.context.strokeStyle = "red"
+        screen.context.strokeRect(this.viewport.x, this.viewport.y, this.viewport.width, this.viewport.height)
     }
 }
