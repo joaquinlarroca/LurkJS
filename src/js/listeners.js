@@ -123,7 +123,7 @@ function handlePointerEvent(event) {
 }
 
 // Add event listeners
-window.addEventListener("pointerdown", handlePointerEvent);
-window.addEventListener("pointermove", handlePointerEvent);
-window.addEventListener("pointerup", handlePointerEvent);
-window.addEventListener("pontercancel", handlePointerEvent);
+//window.addEventListener("pointerdown", handlePointerEvent);
+//window.addEventListener("pointermove", handlePointerEvent);
+//window.addEventListener("pointerup", handlePointerEvent);
+//window.addEventListener("pontercancel", handlePointerEvent);
