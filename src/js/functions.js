@@ -2,6 +2,10 @@ import { global, screen, canvas, ctx, time } from "./main.js";
 import { waitForLoad } from "./loader.js";
 
 export async function setup(width, height, marginMultiplier = 1, listeners = true) {
+    if (!global._setted_up) {
+        screen.canvas.width = width;
+        screen.canvas.height = height;
+    }
     await waitForLoad();
     if (typeof width == "number" && typeof height == "number" && width > 0 && height > 0) {
         if (typeof marginMultiplier === 'number' && marginMultiplier < 0 && marginMultiplier > 1) {
@@ -33,8 +37,6 @@ export async function setup(width, height, marginMultiplier = 1, listeners = tru
         if (!global._setted_up) {
             global._setted_up = true;
             global.canvas.marginMultiplier = marginMultiplier;
-            screen.canvas.width = width;
-            screen.canvas.height = height;
             document.body.append(screen.canvas);
 
             let timestamp = performance.now();

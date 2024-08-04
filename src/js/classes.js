@@ -70,8 +70,8 @@ export class camera {
         this.viewport = {
             x: 0,
             y: 0,
-            width: 1000,
-            height: 1000
+            width: screen.canvas.width/2,
+            height: screen.canvas.height/2
         }
         this.snapshot = undefined
     }
@@ -81,9 +81,10 @@ export class camera {
     draw() {
         screen.context.drawImage(this.snapshot, this.viewport.x, this.viewport.y, this.viewport.width, this.viewport.height, this.x, this.y, this.width, this.height)
     }
-    drawcropArea(){
+    drawcropArea() {
         //draw the area
         screen.context.strokeStyle = "red"
+        screen.context.lineWidth = screen.canvas.width / screen.canvas.height * 2
         screen.context.strokeRect(this.viewport.x, this.viewport.y, this.viewport.width, this.viewport.height)
     }
 }

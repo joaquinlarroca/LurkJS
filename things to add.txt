@@ -1,60 +1,75 @@
-- Touch and pointer event listener 
-	function handlePointerEvent(event) {
-  const hitbox = { x: 100, y: 100, w: 200, h: 200 }; // Replace with your hitbox
+- Possible fix to Touch and pointe
+let activePointers = {};
 
-  for (let i = 0; i < event.changedTouches.length; i++) {
-    const touch = event.changedTouches[i];
-    const pointerId = touch.identifier;
+function touchingHitbox(pointer, hitbox) {
+  // Implement your hitbox detection logic here
+  // This function should return true if the pointer is within the hitbox
+  // Example:
+  return pointer.clientX >= hitbox.left &&
+         pointer.clientX <= hitbox.right &&
+         pointer.clientY >= hitbox.top &&
+         pointer.clientY <= hitbox.bottom;
+}
 
-    // Check if the touch is inside the hitbox
-    const isInside = isPointerInsideHitbox(hitbox, touch);
+function handlePointerEvent(event) {
+  const pointerId = event.pointerId;
+  const pointer = event.type === 'touch' ? event.changedTouches[0] : event;
 
-    if (isInside) {
-      switch (event.type) {
-        case 'pointerdown':
-          // Handle pointer down event
-          console.log(`Pointer ${pointerId} down`);
-          break;
-        case 'pointermove':
-          // Handle pointer move event
-          console.log(`Pointer ${pointerId} moved`);
-          break;
-        case 'pointerup':
-          // Handle pointer up event
-          console.log(`Pointer ${pointerId} up`);
-          break;
-        case 'pointercancel':
-          // Handle pointer cancel event
-          console.log(`Pointer ${pointerId} cancelled`);
-          break;
+  switch (event.type) {
+    case 'pointerdown':
+      activePointers[pointerId] = {
+        id: pointerId,
+        x: pointer.clientX,
+        y: pointer.clientY,
+        isDragging: false
+      };
+
+      if (touchingHitbox(pointer, hitbox)) {
+        // Handle pointer down on hitbox
+        console.log('Pointer down on hitbox');
       }
-    }
+      break;
+
+    case 'pointermove':
+      if (activePointers[pointerId]) {
+        activePointers[pointerId].x = pointer.clientX;
+        activePointers[pointerId].y = pointer.clientY;
+
+        if (activePointers[pointerId].isDragging) {
+          // Handle dragging logic
+          console.log('Dragging');
+        } else if (touchingHitbox(pointer, hitbox)) {
+          // Handle hover or potential drag start
+          console.log('Hovering over hitbox');
+          activePointers[pointerId].isDragging = true; // Start dragging
+        }
+      }
+      break;
+
+    case 'pointerup':
+    case 'pointercancel':
+      if (activePointers[pointerId]) {
+        delete activePointers[pointerId];
+      }
+      break;
   }
 }
 
-function isPointerInsideHitbox(hitbox, touch) {
-  const { x, y, w, h } = hitbox;
-  const pointerX = touch.clientX;
-  const pointerY = touch.clientY;
-  return pointerX >= x && pointerX <= x + w && pointerY >= y && pointerY <= y + h;
-}
-
-// Add event listeners
-element.addEventListener('pointerdown', handlePointerEvent);
-element.addEventListener('pointermove', handlePointerEvent);
-element.addEventListener('pointerup', handlePointerEvent);
-element.addEventListener('pointercancel', handlePointerEvent);
+window.addEventListener("pointerdown", handlePointerEvent);
+window.addEventListener("pointermove", handlePointerEvent);
+window.addEventListener("pointerup", handlePointerEvent);
+window.addEventListener("pointercancel", handlePointerEvent);
 
 - Update viewport meta tag to prevent pinch zooming <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 - Add to html in css {touch-action: manipulation; overscroll-behavior-y: none;}
 
-- Use scaling in mouse pos let rect = canvas.getBoundingClientRect();
-                const scaleFactorX = canvas.width / rect.width;
-                const scaleFactorY = canvas.height / rect.height;
-                const scaledX = (event.clientX - rect.left) * scaleFactorX;
-                const scaledY = (event.clientY - rect.top) * scaleFactorY;
-
-                mouse.x = scaledX;
-                mouse.y = scaledY;
-                mouse.pos = [Math.round(scaledX), Math.round(scaledY)];
+- Use scaling in mouse pos 
+  let rect = canvas.getBoundingClientRect();
+  const scaleFactorX = canvas.width / rect.width;
+  const scaleFactorY = canvas.height / rect.height;
+  const scaledX = (event.clientX - rect.left) * scaleFactorX;
+  const scaledY = (event.clientY - rect.top) * scaleFactorY;
+  mouse.x = scaledX;
+  mouse.y = scaledY;
+  mouse.pos = [Math.round(scaledX), Math.round(scaledY)];

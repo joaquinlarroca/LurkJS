@@ -1,17 +1,17 @@
 import { global, screen, ctx, canvas, setup, Object, loadImage } from "./src/js/index.js";
 import { time } from "./src/js/main.js";
-import { keyPressed } from "./src/js/listeners.js";
+import { keyPressed, mouse } from "./src/js/listeners.js";
 import { image } from "./src/js/main.js";
 import { camera } from "./src/js/classes.js";
 
 await loadImage("src/bunny.png")
 await loadImage("bg.png")
+await setup(1000, 1000, 0.95, false);
+
 let a = new Object(image["src/bunny.png"], [0, 0], [250, 250])
 let park = new Object(image["bg.png"], [0, 0], [1000, 1000])
 let cam = new camera(0, 0, 250, 250)
-cam.viewport.width = 100
-cam.viewport.height = 100
-await setup(1000, 1000, 0.95, false);
+
 window.addEventListener("started", () => {
     // start
 })
@@ -22,6 +22,7 @@ window.addEventListener("update", () => {
     park.draw()
     ctx.fillText(global.fps, 500, 500)
     //a.draw()
+
     cam.drawcropArea()
     for (let index = 0; index < 1; index++) {
         cam.crop()
@@ -43,16 +44,4 @@ window.addEventListener("update", () => {
     }
 
 
-    if (keyPressed("arrowleft") ) {
-        cam.viewport.x -= 3
-    }
-    if (keyPressed("arrowright") ) {
-        cam.viewport.x += 3
-    }
-    if (keyPressed("arrowdown") ) {
-        cam.viewport.y += 3
-    }
-    if (keyPressed("arrowup") ) {
-        cam.viewport.y -= 3
-    }
 })

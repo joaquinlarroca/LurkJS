@@ -62,34 +62,25 @@ window.addEventListener("resize", () => {
 //! pointer listeners
 
 //!#########################################
-
+export let mouse = {
+    x: 0,
+    y: 0,
+    pos: [0, 0]
+}
 function handlePointerEvent(event) {
     switch (event.pointerType) {
         case "mouse":
             const pointerId = event.pointerId;
             switch (event.type) {
                 case 'pointerdown':
-                    // Handle pointer down event
-                    console.log(`mouse ${pointerId} down`);
                     break;
                 case 'pointermove':
-                    // Handle pointer move event
-                    console.log(`mouse ${pointerId} moved`);
                     break;
                 case 'pointerup':
-                    // Handle pointer up event
-                    console.log(`mouse ${pointerId} up`);
                     break;
                 case 'pointercancel':
-                    // Handle pointer cancel event
-                    console.log(`mouse ${pointerId} cancelled`);
                     break;
             }
-
-            break;
-
-        case "pen":
-            process_pointer_pen(event);
             break;
 
         case "touch":
@@ -98,32 +89,23 @@ function handlePointerEvent(event) {
                 const pointerId = touch.identifier;
                 switch (event.type) {
                     case 'pointerdown':
-                        // Handle pointer down event
-                        console.log(`touch ${pointerId} down`);
                         break;
                     case 'pointermove':
-                        // Handle pointer move event
-                        console.log(`touch ${pointerId} moved`);
                         break;
                     case 'pointerup':
-                        // Handle pointer up event
-                        console.log(`touch ${pointerId} up`);
                         break;
                     case 'pointercancel':
-                        // Handle pointer cancel event
-                        console.log(`touch ${pointerId} cancelled`);
                         break;
                 }
             }
             break;
         default:
-            console.log(`pointerType ${event.pointerType} is not supported`);
+            break
     }
-
 }
 
-// Add event listeners
-//window.addEventListener("pointerdown", handlePointerEvent);
-//window.addEventListener("pointermove", handlePointerEvent);
-//window.addEventListener("pointerup", handlePointerEvent);
-//window.addEventListener("pontercancel", handlePointerEvent);
+
+window.addEventListener("pointerdown", handlePointerEvent);
+window.addEventListener("pointermove", handlePointerEvent);
+window.addEventListener("pointerup", handlePointerEvent);
+window.addEventListener("pontercancel", handlePointerEvent);
