@@ -13,7 +13,7 @@ let park = new Object(image["bg.png"], [0, 0], [1000, 1000])
 let cam = new camera(0, 0, 250, 250)
 
 window.addEventListener("started", () => {
-    // start
+    a.offset = [0.5, 0.5]
 })
 window.addEventListener("update", () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -21,13 +21,15 @@ window.addEventListener("update", () => {
     ctx.font = "90px serif"
     park.draw()
     ctx.fillText(global.fps, 500, 500)
-    //a.draw()
+    ctx.fillText(a.offset, 500, 590)
+    a.draw()
+    a.rotation = time.time * 100
 
-    cam.drawcropArea()
-    for (let index = 0; index < 1; index++) {
-        cam.crop()
-        cam.draw()
-    }
+    //cam.drawcropArea()
+    //for (let index = 0; index < 1; index++) {
+    //    cam.crop()
+    //    cam.draw()
+    //}
 
 
     if (keyPressed("a")) {
@@ -42,6 +44,13 @@ window.addEventListener("update", () => {
     if (keyPressed("w")) {
         a.y -= 7
     }
+    if (keyPressed("q") && a.offset[0] > 0) {
+        a.offset[0] -= 0.01
+    }
+    if (keyPressed("e") && a.offset[0] < 1) {
+        a.offset[0] += 0.01
+    }
+
 
 
 })

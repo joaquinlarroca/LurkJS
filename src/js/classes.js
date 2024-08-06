@@ -52,10 +52,10 @@ export class Object {
 
         screen.context.fillStyle = "rgba(0,0,0,0)"
         screen.context.beginPath();
-        screen.context.roundRect(0, 0, this.width, this.height, this.borderRadius);
+        screen.context.roundRect(-this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height, this.borderRadius);
         screen.context.closePath()
         screen.context.clip()
-        screen.context.drawImage(this.texture, 0, 0, this.width, this.height);
+        screen.context.drawImage(this.texture, -this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height);
         screen.context.fill();
 
         screen.context.restore();
@@ -70,8 +70,8 @@ export class camera {
         this.viewport = {
             x: 0,
             y: 0,
-            width: screen.canvas.width/2,
-            height: screen.canvas.height/2
+            width: screen.canvas.width / 2,
+            height: screen.canvas.height / 2
         }
         this.snapshot = undefined
     }
