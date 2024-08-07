@@ -5,7 +5,7 @@ export class Object {
         this.texture = texture
         this.x = x
         this.y = y
-        this.offset = [0, 0]
+        this.offset = [0.5, 0.5]
 
         this.width = width
         this.height = height
@@ -19,7 +19,7 @@ export class Object {
             x: this.x + this.width / 2,
             y: this.y + this.height / 2
         }
-        this.rotation = 0
+        this.angle = 0
 
         this.alpha = 1
 
@@ -40,14 +40,14 @@ export class Object {
         this.bottom = this.y + this.height
 
         this.anchor = {
-            x: this.x + this.width * -this.offset[0],
-            y: this.y + this.height * -this.offset[1]
+            x: this.x + this.width * this.offset[0],
+            y: this.y + this.height * this.offset[1]
         }
         screen.context.save()
         screen.context.globalAlpha = this.alpha
 
         screen.context.translate(this.anchor.x, this.anchor.y)
-        screen.context.rotate(0.017453292519943295 * this.rotation)
+        screen.context.rotate(0.017453292519943295 * this.angle)
         screen.context.scale(this.scale[0], this.scale[1])
 
         screen.context.fillStyle = "rgba(0,0,0,0)"

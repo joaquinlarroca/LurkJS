@@ -23,7 +23,12 @@ window.addEventListener("update", () => {
     ctx.fillText(global.fps, 500, 500)
     ctx.fillText(a.offset, 500, 590)
     a.draw()
-    a.rotation = time.time * 100
+    if (keyPressed("r")) {
+        a.angle += time.deltaTime * 20
+    }
+    if (keyPressed("t")) {
+        a.angle = 0
+    }
 
     //cam.drawcropArea()
     //for (let index = 0; index < 1; index++) {
