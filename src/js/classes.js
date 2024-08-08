@@ -1,6 +1,6 @@
 import { canvas, global, screen } from "./main.js";
 
-export class Object {
+export class object {
     constructor(texture, [x, y], [width, height]) {
         this.texture = texture
         this.x = x
@@ -70,8 +70,8 @@ export class camera {
         this.viewport = {
             x: 0,
             y: 0,
-            width: screen.canvas.width / 2,
-            height: screen.canvas.height / 2
+            width: screen.canvas.width,
+            height: screen.canvas.height
         }
         this.snapshot = undefined
     }

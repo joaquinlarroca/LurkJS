@@ -58,9 +58,12 @@ export async function setup(width, height, marginMultiplier = 1, listeners = tru
 
     }
 }
-
+const canvasBG = screen.css.computedStyles.getPropertyValue('--canvas-bg').trim() ?? "#000000";
 export function clear() {
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    screen.context.save()
+    screen.context.fillStyle = canvasBG
+    screen.context.fillRect(0, 0, screen.canvas.width, screen.canvas.height)
+    screen.context.restore()
 }
 export function sortAndDrawQueuedObjects() {
     // Sort by z and then by draw order
