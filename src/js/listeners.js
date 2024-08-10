@@ -62,48 +62,36 @@ window.addEventListener("resize", () => {
 //! pointer listeners
 
 //!#########################################
-export let mouse = {
-    x: 0,
-    y: 0,
-    pos: [0, 0]
-}
+
+export let pointers = {}
+
 function handlePointerEvent(event) {
-    switch (event.pointerType) {
-        case "mouse":
-            const pointerId = event.pointerId;
-            switch (event.type) {
-                case 'pointerdown':
-                    break;
-                case 'pointermove':
-                    break;
-                case 'pointerup':
-                    break;
-                case 'pointercancel':
-                    break;
-            }
-            break;
+    const pointerId = event.pointerId;
+    let rect = screen.canvas.getBoundingClientRect();
+    const scaleFactorX = screen.canvas.width / rect.width;
+    const scaleFactorY = screen.canvas.height / rect.height;
+    const scaledX = (event.clientX - rect.left) * scaleFactorX;
+    const scaledY = (event.clientY - rect.top) * scaleFactorY;
 
-        case "touch":
-            for (let i = 0; i < event.changedTouches.length; i++) {
-                const touch = event.changedTouches[i];
-                const pointerId = touch.identifier;
-                switch (event.type) {
-                    case 'pointerdown':
-                        break;
-                    case 'pointermove':
-                        break;
-                    case 'pointerup':
-                        break;
-                    case 'pointercancel':
-                        break;
-                }
+    switch (event.type) {
+        case 'pointerdown':
+            pointers[pointerId] = {
+                x: scaledX,
+                y: scaledY
             }
             break;
-        default:
-            break
+        case 'pointermove':
+            pointers[pointerId] = {
+                x: scaledX,
+                y: scaledY
+            }
+            break;
+        case 'pointerup' || 'pointercancel':
+            delete pointers[pointerId];
+            break;
     }
-}
 
+}
 
 window.addEventListener("pointerdown", handlePointerEvent);
 window.addEventListener("pointermove", handlePointerEvent);

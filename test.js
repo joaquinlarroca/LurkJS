@@ -1,5 +1,5 @@
 import { global, screen, ctx, canvas, time, image } from "./src/js/main.js";
-import { keyPressed, mouse } from "./src/js/listeners.js";
+import { keyPressed } from "./src/js/listeners.js";
 import { camera, object } from "./src/js/classes.js";
 import { loadImage } from "./src/js/loader.js";
 import { setup, clear } from "./src/js/functions.js";
@@ -20,8 +20,9 @@ window.addEventListener("update", () => {
     ctx.font = "90px serif"
     park.draw()
     ctx.fillText(global.fps, 500, 500)
-    ctx.fillText(a.offset, 500, 590)
+    ctx.fillText(a.hitboxes[0].width, 500, 590)
     a.draw()
+    a.hitboxes[0].draw()
     if (keyPressed("r")) {
         a.angle += time.deltaTime * 60
     }
