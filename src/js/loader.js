@@ -38,7 +38,13 @@ export async function waitForLoad() {
         checkLoaded();
     });
 }
-export async function loadImage(url) {
+export async function loadImage(url, name) {
+    if (image[url]) {
+        return image[url]
+    }
+    if (name == undefined) {
+        name = url
+    }
     global._assetsToLoadCount += 1;
     let imageElement;
     try {
@@ -46,11 +52,8 @@ export async function loadImage(url) {
         imageElement.src = url;
         await new Promise((resolve, reject) => {
             imageElement.onload = () => {
-                setTimeout(() => {
-                    global._assetsToLoadDone += 1;
-                    resolve();
-                    console.log("loaded");
-                }, 1000 * Math.random());
+                global._assetsToLoadDone += 1;
+                resolve();
             };
             imageElement.onerror = () => {
                 reject(new Error(`Failed to load texture: ${url}`));
@@ -59,6 +62,6 @@ export async function loadImage(url) {
     } catch (error) {
         throw error;
     }
-    image[url] = imageElement
+    image[name] = imageElement
     return imageElement;
 }

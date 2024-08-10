@@ -1,41 +1,53 @@
 import { global, screen, ctx, canvas, time, image } from "./src/js/main.js";
 import { keyPressed } from "./src/js/listeners.js";
-import { camera, object } from "./src/js/classes.js";
+import { camera, hitbox, object } from "./src/js/classes.js";
 import { loadImage } from "./src/js/loader.js";
-import { setup, clear } from "./src/js/functions.js";
+import { setup, clear, drawtext } from "./src/js/functions.js";
 
-await loadImage("src/bunny.png")
-await loadImage("bg.png")
-await setup(1920, 1080, 0.99, false);
+await loadImage("./src/bunny.png", "bunny")
+await loadImage("./bg.png", "park")
+await loadImage("./src/images/green.png", "green")
 
-let a = new object(image["src/bunny.png"], [0, 0], [250, 250])
-let park = new object(image["bg.png"], [0, 0], [1920, 864])
-let cam = new camera(0, 0, 800, 500)
+await setup(1920, 1080, 0.99, true);
+
+let a = new object(image["bunny"], [0, 0], [500, 500])
+a.hitboxes.push(new hitbox(a, 1))
+
+let b = new object(image["green"], [200, 200], [250, 250])
+b.borderRadius = 250
+
+let park = new object(image["park"], [0, 0], [1920, 1080])
+
+let cam = new camera(1344, 0, 576, 324)
+
 window.addEventListener("started", () => {
-    a.offset = [0.5, 0.5]
+    
 })
 window.addEventListener("update", () => {
     clear()
-    ctx.fillStyle = "white"
-    ctx.font = "90px serif"
+
     park.draw()
-    ctx.fillText(global.fps, 500, 500)
-    ctx.fillText(a.hitboxes[0].width, 500, 590)
     a.draw()
-    a.hitboxes[0].draw()
+    b.draw()
+    b.hitboxes.draw()
+    a.hitboxes.draw()
+
+    ctx.fillStyle = "white"
+    drawtext(`FPS ${global.fps}`, [0, 0], 32, "sans-serif", "top", "start", 0, 1.0)
+
+
+    if (a.hitboxes[0].collide(b.hitboxes[0])) {
+        cam.crop()
+        cam.draw()
+        cam.drawcropArea()
+    }
     if (keyPressed("r")) {
         a.angle += time.deltaTime * 60
     }
     if (keyPressed("t")) {
         a.angle = 0
     }
-    if (keyPressed("y")) {
-        for (let index = 0; index < 1; index++) {
-            cam.crop()
-            cam.draw()
-        }
-        cam.drawcropArea()
-    }
+
 
 
     if (keyPressed("a")) {

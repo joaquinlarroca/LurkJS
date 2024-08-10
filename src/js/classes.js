@@ -39,7 +39,7 @@ export class hitbox {
         this.updateDimensions()
         screen.context.save()
         screen.context.strokeStyle = "red"
-        screen.context.lineWidth = ((this.height / this.width) + (this.width / this.height)) * 2
+        screen.context.lineWidth = ((this.height / this.width) + (this.width / this.height))
         screen.context.strokeRect(this.left, this.top, this.width, this.height)
         screen.context.restore()
     }
@@ -90,24 +90,28 @@ export class hitboxFixed {
     }
 }
 export class hitboxCircle {
-    constructor(object, sizeMultiplier, radius) {
+    constructor(object, sizeMultiplier) {
         this.type = "hitbox-circle"
         this.object = object ?? null
         this.sizeMultiplier = sizeMultiplier ?? 1
-        this.radius = radius ?? 32
+        this.radius = this.object.halfwidth
+        this.x = this.object.x + this.object.halfwidth
+        this.y = this.object.y + this.object.halfheight
     }
     updateDimensions() {
-        // Nothing Here ... yet
+        this.x = this.object.x + this.object.halfwidth
+        this.y = this.object.y + this.object.halfheight
     }
     collide(hitbox) {
+        this.updateDimensions()
+        hitbox.updateDimensions()
         switch (hitbox.type) {
             case "hitbox-rect" || "hitbox-rect-fixed":
-                hitbox.updateDimensions()
                 const distancex = this.object.x - Math.max(hitbox.left, Math.min(this.object.x, hitbox.right))
                 const distancey = this.object.y - Math.max(hitbox.top, Math.min(this.object.y, hitbox.bottom))
                 return Math.sqrt(distancex ** 2 + distancey ** 2) <= this.radius
             case "hitbox-circle" || "hitbox-circle-fixed":
-                const distance = Math.sqrt((hitbox.x - this.object.x) ** 2 + (hitbox.y - this.object.y) ** 2);
+                const distance = Math.sqrt((hitbox.x - this.x) ** 2 + (hitbox.y - this.y) ** 2);
                 return distance <= this.radius + hitbox.radius;
             default:
                 return false
@@ -119,9 +123,9 @@ export class hitboxCircle {
         screen.context.strokeStyle = "red"
         screen.context.lineWidth = 2
         screen.context.beginPath();
-        screen.context.moveTo(this.object.x, this.object.y);
-        screen.context.lineTo(this.object.x + this.radius, this.object.y);
-        screen.context.arc(this.object.x, this.object.y, this.radius, 0, 2 * Math.PI);
+        screen.context.moveTo(this.object.x + this.object.halfwidth, this.object.y + this.object.halfheight);
+        screen.context.lineTo(this.object.x + this.object.halfwidth + this.radius, this.object.y + this.object.halfheight);
+        screen.context.arc(this.object.x + this.object.halfwidth, this.object.y + this.object.halfheight, this.radius, 0, 2 * Math.PI);
         screen.context.stroke()
         screen.context.restore()
     }
@@ -178,9 +182,13 @@ export class object {
         this.halfheight = this.height / 2
         this.scale = [1, 1]
         this.hitboxes = [
-            new hitbox(this, 1)
+            new hitboxCircle(this, 1)
         ]
-
+        this.hitboxes.draw = () => {
+            for (const hitbox of this.hitboxes) {
+                hitbox.draw()
+            }
+        }
         this.anchor = {
             x: this.x + this.width / 2,
             y: this.y + this.height / 2

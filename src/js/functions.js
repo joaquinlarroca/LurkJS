@@ -66,15 +66,15 @@ export function clear() {
     screen.context.restore()
 }
 export function drawtext(text = "undefined", [x = 0, y = 0], fontSize = 24, fontFamily = "sans-serif", baseline = "top", textAlign = "start", angle = 0, alpha = 1.0) {
-    ctx.save();
-    ctx.textBaseline = baseline;
-    ctx.textAlign = textAlign;
-    ctx.font = `${fontSize}px ${fontFamily}`;
-    ctx.translate(x, y);
-    ctx.rotate(0.017453292519943295 * angle);
-    ctx.globalAlpha = alpha;
-    ctx.fillText(text, 0, 0);
-    ctx.restore();
+    screen.context.save();
+    screen.context.textBaseline = baseline;
+    screen.context.textAlign = textAlign;
+    screen.context.font = `${fontSize}px ${fontFamily}`;
+    screen.context.translate(x, y);
+    screen.context.rotate(0.017453292519943295 * angle);
+    screen.context.globalAlpha = alpha;
+    screen.context.fillText(text, 0, 0);
+    screen.context.restore();
 }
 export function sortAndDrawQueuedObjects() {
     // Sort by z and then by draw order
