@@ -22,13 +22,15 @@ export class hitbox {
     }
     collide(hitbox) {
         this.updateDimensions()
+        hitbox.updateDimensions()
         switch (hitbox.type) {
-            case "hitbox-rect" || "hitbox-rect-fixed":
-                hitbox.updateDimensions()
+            case "hitbox-rect":
+            case "hitbox-rect-fixed":
                 return this.right >= hitbox.left && this.left <= hitbox.right && this.bottom >= hitbox.top && this.top <= hitbox.bottom
-            case "hitbox-circle" || "hitbox-circle-fixed":
-                const dx = this.x - Math.max(this.left, Math.min(hitbox.x, this.right))
-                const dy = this.y - Math.max(this.top, Math.min(hitbox.y, this.bottom))
+            case "hitbox-circle":
+            case "hitbox-circle-fixed":
+                const dx = hitbox.x - Math.max(this.left, Math.min(hitbox.x, this.right))
+                const dy = hitbox.y - Math.max(this.top, Math.min(hitbox.y, this.bottom))
                 return Math.sqrt(dx ** 2 + dy ** 2) <= hitbox.radius
             default:
                 return false
@@ -39,7 +41,7 @@ export class hitbox {
         this.updateDimensions()
         screen.context.save()
         screen.context.strokeStyle = "red"
-        screen.context.lineWidth = ((this.height / this.width) + (this.width / this.height))
+        screen.context.lineWidth = 2
         screen.context.strokeRect(this.left, this.top, this.width, this.height)
         screen.context.restore()
     }
@@ -67,13 +69,15 @@ export class hitboxFixed {
     }
     collide(hitbox) {
         this.updateDimensions()
+        hitbox.updateDimensions()
         switch (hitbox.type) {
-            case "hitbox-rect" || "hitbox-rect-fixed":
-                hitbox.updateDimensions()
+            case "hitbox-rect":
+            case "hitbox-rect-fixed":
                 return this.right >= hitbox.left && this.left <= hitbox.right && this.bottom >= hitbox.top && this.top <= hitbox.bottom
-            case "hitbox-circle" || "hitbox-circle-fixed":
-                const dx = this.x - Math.max(this.left, Math.min(hitbox.x, this.right))
-                const dy = this.y - Math.max(this.top, Math.min(hitbox.y, this.bottom))
+            case "hitbox-circle":
+            case "hitbox-circle-fixed":
+                const dx = hitbox.x - Math.max(this.left, Math.min(hitbox.x, this.right))
+                const dy = hitbox.y - Math.max(this.top, Math.min(hitbox.y, this.bottom))
                 return Math.sqrt(dx ** 2 + dy ** 2) <= hitbox.radius
             default:
                 return false
@@ -84,7 +88,7 @@ export class hitboxFixed {
         this.updateDimensions()
         screen.context.save()
         screen.context.strokeStyle = "red"
-        screen.context.lineWidth = ((this.height / this.width) + (this.width / this.height)) * 2
+        screen.context.lineWidth = 2
         screen.context.strokeRect(this.left, this.top, this.width, this.height)
         screen.context.restore()
     }
@@ -106,11 +110,13 @@ export class hitboxCircle {
         this.updateDimensions()
         hitbox.updateDimensions()
         switch (hitbox.type) {
-            case "hitbox-rect" || "hitbox-rect-fixed":
-                const distancex = this.object.x - Math.max(hitbox.left, Math.min(this.object.x, hitbox.right))
-                const distancey = this.object.y - Math.max(hitbox.top, Math.min(this.object.y, hitbox.bottom))
+            case "hitbox-rect":
+            case "hitbox-rect-fixed":
+                const distancex = this.x - Math.max(hitbox.left, Math.min(this.x, hitbox.right))
+                const distancey = this.y - Math.max(hitbox.top, Math.min(this.y, hitbox.bottom))
                 return Math.sqrt(distancex ** 2 + distancey ** 2) <= this.radius
-            case "hitbox-circle" || "hitbox-circle-fixed":
+            case "hitbox-circle":
+            case "hitbox-circle-fixed":
                 const distance = Math.sqrt((hitbox.x - this.x) ** 2 + (hitbox.y - this.y) ** 2);
                 return distance <= this.radius + hitbox.radius;
             default:
@@ -142,13 +148,16 @@ export class hitboxCircleFixed {
         // Nothing Here Too ... yet
     }
     collide(hitbox) {
+        this.updateDimensions()
+        hitbox.updateDimensions()
         switch (hitbox.type) {
-            case "hitbox-rect" || "hitbox-rect-fixed":
-                hitbox.updateDimensions()
+            case "hitbox-rect":
+            case "hitbox-rect-fixed":
                 const distancex = this.x - Math.max(hitbox.left, Math.min(this.x, hitbox.right))
                 const distancey = this.y - Math.max(hitbox.top, Math.min(this.y, hitbox.bottom))
                 return Math.sqrt(distancex ** 2 + distancey ** 2) <= this.radius
-            case "hitbox-circle" || "hitbox-circle-fixed":
+            case "hitbox-circle":
+            case "hitbox-circle-fixed":
                 const distance = Math.sqrt((hitbox.x - this.x) ** 2 + (hitbox.y - this.y) ** 2);
                 return distance <= this.radius + hitbox.radius;
             default:
