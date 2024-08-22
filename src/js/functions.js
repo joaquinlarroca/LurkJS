@@ -1,6 +1,8 @@
 import { global, screen, canvas, ctx, time } from "./main.js";
 import { waitForLoad } from "./loader.js";
 
+const canvasBG = screen.css.computedStyles.getPropertyValue('--canvas-bg').trim() ?? "#000000";
+
 export async function setup(width, height, marginMultiplier = 1, listeners = true) {
     if (!global._setted_up) {
         screen.canvas.width = width;
@@ -58,7 +60,6 @@ export async function setup(width, height, marginMultiplier = 1, listeners = tru
 
     }
 }
-const canvasBG = screen.css.computedStyles.getPropertyValue('--canvas-bg').trim() ?? "#000000";
 export function clear() {
     screen.context.save()
     screen.context.fillStyle = canvasBG
@@ -82,4 +83,15 @@ export function sortAndDrawQueuedObjects() {
     for (let sprite of global._sprites_to_draw) {
         sprite.draw(context);
     }
+}
+export function measureTextWidth(text, fontSize, fontFamily) {
+    screen.context.save()
+    text = text.toString()
+    screen.context.font = `${fontSize}px ${fontFamily}`;
+    const textMetrics = screen.context.measureText(text);
+    screen.context.restore()
+    return textMetrics.width;
+}
+export function lerp(startValue, endValue, interpolation) {
+    return startValue + (endValue - startValue) * interpolation;
 }

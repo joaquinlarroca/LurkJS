@@ -34,16 +34,16 @@ export function keyPressed(key) {
     return pressedKeys.has(key.toUpperCase());
 }
 window.addEventListener('keydown', event => {
-    //if (!preventKeys.includes(event.key)) {
-    //    event.preventDefault();
-    //}
+    if (preventKeys.includes(event.key)) {
+        event.preventDefault();
+    }
     pressedKeys.add(event.key.toUpperCase());
 });
 
 window.addEventListener('keyup', event => {
-    //if (!preventKeys.includes(event.key)) {
-    //    event.preventDefault();
-    //}
+    if (preventKeys.includes(event.key)) {
+        event.preventDefault();
+    }
     pressedKeys.delete(event.key.toUpperCase());
 });
 
@@ -72,7 +72,7 @@ function handlePointerEvent(event) {
     const scaleFactorY = screen.canvas.height / rect.height;
     const scaledX = (event.clientX - rect.left) * scaleFactorX;
     const scaledY = (event.clientY - rect.top) * scaleFactorY;
-
+    event.preventDefault();
     switch (event.type) {
         case 'pointerdown':
             pointers[pointerId] = {

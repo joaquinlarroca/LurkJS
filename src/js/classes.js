@@ -206,11 +206,6 @@ export class object {
 
         this.alpha = 1
 
-        this.left = this.x
-        this.right = this.x + this.width
-        this.top = this.y
-        this.bottom = this.y + this.height
-
         this.borderRadius = 0
     }
     collidesWith(object) {
@@ -226,12 +221,6 @@ export class object {
     update() {
         this.halfwidth = this.width / 2
         this.halfheight = this.height / 2
-
-        this.left = this.x
-        this.right = this.x + this.width
-        this.top = this.y
-        this.bottom = this.y + this.height
-
         this.anchor = {
             x: this.x + this.width * this.offset[0],
             y: this.y + this.height * this.offset[1]
@@ -298,5 +287,104 @@ export class camera {
         screen.context.strokeStyle = "red"
         screen.context.lineWidth = screen.canvas.width / screen.canvas.height * 2
         screen.context.strokeRect(this.viewport.x, this.viewport.y, this.viewport.width, this.viewport.height)
+    }
+}
+export class timeout {
+    constructor(time = 1000) {
+        this.time = time;
+        this.active = false;
+        this.currentTime = 0;
+        this.timeLeft = 0
+        this.timeElapsed = 0;
+        this.updateTime = 75
+    }
+    start() {
+        if (!this.active) {
+            this.active = true;
+            this.currentTime = Date.now();
+            const timeout = setTimeout(() => {
+                this.active = false;
+                this.currentTime = 0;
+                this.timeElapsed = 0;
+                this.timeLeft = 0;
+                clearTimeout(timeout);
+            }, this.time);
+            const updateTimeout = () => {
+                if (this.active) {
+                    this.timeElapsed = Date.now() - this.currentTime;
+                    this.timeLeft = this.time - this.timeElapsed
+                    setTimeout(updateTimeout, this.updateTime);
+                }
+            };
+            updateTimeout();
+        }
+    }
+}
+export class sound {
+    constructor(sound, playbackRate, volume, loop) {
+        this.sound = new Audio()
+        this.sound.src = sound
+        this.sound.loop = loop ?? false
+        this.sound.playbackRate = playbackRate ?? 1.0
+        this.sound.volume = volume ?? 1.0
+
+        this.sound.addEventListener('ended', () => {
+            this.ended = true;
+        });
+        this.sound.addEventListener('timeupdate', () => {
+            this.currentTime = this.sound.currentTime;
+        });
+        this.sound.addEventListener("canplaythrough", () => {
+            this.sound.canplay = true
+        })
+
+    }
+    play() {
+        if (this.sound.canplay) {
+            this.ended = false
+            this.sound.play()
+        }
+    }
+    pause() {
+        this.sound.pause()
+    }
+    stop() {
+        if (!this.sound.paused) {
+            this.sound.pause()
+        }
+        this.sound.currentTime = 0
+    }
+    setCurrentTime(seconds) {
+        if (seconds >= 0 && seconds <= this.sound.duration) {
+            this.sound.currentTime = seconds;
+        }
+    }
+}
+export class sound2 {
+    constructor(sound, playbackRate, volume) {
+        this.playbackRate = playbackRate ?? 1.0
+        this.volume = volume ?? 1.0
+        this.audioSrc = sound;
+        this.audioClones = [];
+    }
+
+    play() {
+        let audio = new Audio(this.audioSrc);
+        audio.playbackRate = this.playbackRate
+        audio.volume = this.volume
+        audio.play();
+        this.audioClones.push(audio);
+
+        audio.addEventListener('ended', () => {
+            this.audioClones = this.audioClones.filter(clone => clone !== audio);
+        });
+    }
+
+    stopAll() {
+        this.audioClones.forEach(clone => {
+            clone.pause();
+            clone.currentTime = 0;
+        });
+        this.audioClones = [];
     }
 }

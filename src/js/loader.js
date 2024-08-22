@@ -65,3 +65,27 @@ export async function loadImage(url, name) {
     image[name] = imageElement
     return imageElement;
 }
+export async function loadSound(url, name) {
+    if (sound[url]) {
+        return sound[url]
+    }
+    if (name == undefined) {
+        name = url
+    }
+    global._assetsToLoadCount += 1;
+    let audioElement;
+    
+    await new Promise((resolve, reject) => {
+        audioElement = new Audio();
+        audioElement.src = url;
+        audioElement.onload = () => {
+            global._assetsToLoadDone += 1;
+            resolve();
+        };
+        audioElement.onerror = () => {
+            reject(new Error(`Failed to load sound: ${url}`));
+        };
+    });
+    sound[name] = audioElement
+    return audioElement;
+}
