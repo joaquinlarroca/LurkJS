@@ -1,5 +1,5 @@
 import { global, screen, ctx, canvas, time, image } from "./src/js/main.js";
-import { keyPressed } from "./src/js/listeners.js";
+import { isClicking, keyPressed, mouse } from "./src/js/listeners.js";
 import { camera, hitbox, hitboxCircleFixed, hitboxFixed, object } from "./src/js/classes.js";
 import { loadImage } from "./src/js/loader.js";
 import { setup, clear, drawtext } from "./src/js/functions.js";
@@ -22,7 +22,9 @@ let park = new object(image["park"], [0, 0], [1920, 1080])
 let cam = new camera(1344, 0, 576, 324)
 
 window.addEventListener("started", () => {
-
+    mouse.show = false
+    console.log(mouse.show);
+    
 })
 window.addEventListener("update", () => {
     clear()
@@ -50,7 +52,11 @@ window.addEventListener("update", () => {
     if (keyPressed("space")) {
         console.log(cam.snapshot)
     }
-
+    if (isClicking(a.hitboxes[0])) {
+        cam.crop()
+        cam.draw()
+        cam.drawcropArea()
+    }
     if (keyPressed("a")) {
         a.x -= 7
     }
