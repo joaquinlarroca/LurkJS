@@ -1,5 +1,5 @@
 import { global, screen, ctx, canvas } from "./main.js";
-import { setup } from "./functions.js";
+import { setup, distance } from "./functions.js";
 
 //!#########################################
 
@@ -67,7 +67,8 @@ export let mouse = {
     x: 0,
     y: 0,
     click: false,
-    show: true
+    show: true,
+    preventRightClick: true
 }
 
 let mouseshow = true
@@ -87,28 +88,24 @@ Object.defineProperty(mouse, 'show', {
 
 export function isClicking(hitbox) {
     hitbox.updateDimensions()
+    const pointersDown = Object.values(pointers).filter(pointer => pointer.down);
     switch (hitbox.type) {
         case "hitbox-rect":
         case "hitbox-rect-fixed":
-            for (const [key, pointer] of Object.entries(pointers)) {
-                if (pointer.type == "mouse") {
-                    return hitbox.right >= pointer.x && hitbox.left <= pointer.x && hitbox.bottom >= pointer.y && hitbox.top <= pointer.y
-                }
-            }
+            return pointersDown.some(pointer => hitbox.left <= pointer.x && hitbox.right >= pointer.x && hitbox.top <= pointer.y && hitbox.bottom >= pointer.y);
         case "hitbox-circle":
         case "hitbox-circle-fixed":
-            for (const [key, pointer] of Object.entries(pointers)) {
-                if (pointer.down) {
-                    const distance = Math.sqrt((hitbox.x - pointer.x) ** 2 + (hitbox.y - pointer.y) ** 2);
-                    return distance <= hitbox.radius;
-                }
-            }
+            return pointersDown.some(pointer => pointer.down && distance(pointer.x, pointer.y, hitbox.x, hitbox.y) <= hitbox.radius)
         default:
             return false
     }
-
-
 }
+export function drawPointers() {
+    for (const [key, pointer] of Object.entries(pointers)) {
+        screen.context.fillRect(pointer.x - 8, pointer.y - 8, 16, 16)
+    };
+}
+
 export let pointers = {}
 
 function handlePointerEvent(event) {
@@ -146,11 +143,14 @@ function handlePointerEvent(event) {
                 mouse.y = scaledY
             }
             break;
-        case 'pointerup' || 'pointercancel':
-            if(event.pointerType == "mouse"){
-                mouse.click = false
+        case 'pointerup':
+        case 'pontercancel':
+            if (event.pointerType === "mouse") {
+                mouse.click = false;
+                pointers[pointerId].down = false;
+            } else {
+                delete pointers[pointerId];
             }
-            delete pointers[pointerId];
             break;
     }
 
@@ -160,3 +160,9 @@ window.addEventListener("pointerdown", handlePointerEvent);
 window.addEventListener("pointermove", handlePointerEvent);
 window.addEventListener("pointerup", handlePointerEvent);
 window.addEventListener("pontercancel", handlePointerEvent);
+
+window.addEventListener('contextmenu', (event) => {
+    if (mouse.preventRightClick) {
+        event.preventDefault();
+    }
+});

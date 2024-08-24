@@ -92,6 +92,9 @@ export function measureTextWidth(text, fontSize, fontFamily) {
     screen.context.restore()
     return textMetrics.width;
 }
+export function distance(x1, y1, x2, y2) {
+    return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+}
 export function lerp(startValue, endValue, interpolation) {
     return startValue + (endValue - startValue) * interpolation;
 }

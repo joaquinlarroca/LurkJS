@@ -1,5 +1,5 @@
 import { global, screen, ctx, canvas, time, image } from "./src/js/main.js";
-import { isClicking, keyPressed, mouse } from "./src/js/listeners.js";
+import { drawPointers, isClicking, keyPressed, mouse, pointers } from "./src/js/listeners.js";
 import { camera, hitbox, hitboxCircleFixed, hitboxFixed, object } from "./src/js/classes.js";
 import { loadImage } from "./src/js/loader.js";
 import { setup, clear, drawtext } from "./src/js/functions.js";
@@ -22,7 +22,7 @@ let park = new object(image["park"], [0, 0], [1920, 1080])
 let cam = new camera(1344, 0, 576, 324)
 
 window.addEventListener("started", () => {
-    mouse.show = false
+    mouse.show = true
     console.log(mouse.show);
     
 })
@@ -36,14 +36,7 @@ window.addEventListener("update", () => {
     a.hitboxes.draw()
 
     ctx.fillStyle = "white"
-    drawtext(`FPS ${global.fps}`, [0, 0], 32, "sans-serif", "top", "start", 0, 1.0)
-
-
-    //if (a.hitboxes[0].collide(circle.hitboxes[0])) {
-    //    cam.crop()
-    //    cam.draw()
-    //    cam.drawcropArea()
-    //}
+    drawtext(`FPS ${Object.keys(pointers).length}`, [64, 0], 128, "sans-serif", "top", "start", 0, 1.0)
     if (a.collidesWith(circle)) {
         cam.crop()
         cam.draw()
@@ -52,11 +45,12 @@ window.addEventListener("update", () => {
     if (keyPressed("space")) {
         console.log(cam.snapshot)
     }
-    if (isClicking(a.hitboxes[0])) {
+    if (isClicking(circle.hitboxes[3])) {
         cam.crop()
         cam.draw()
         cam.drawcropArea()
     }
+    drawPointers()
     if (keyPressed("a")) {
         a.x -= 7
     }
