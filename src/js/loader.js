@@ -1,4 +1,4 @@
-import { global, image, screen } from "./main.js"
+import { global, image, screen, sound, font, color } from "./main.js"
 
 const loadingBarColor = screen.css.computedStyles.getPropertyValue('--loading-bar-done-color').trim() ?? "#A9F249";
 const loadingBackgroundColor = screen.css.computedStyles.getPropertyValue('--loading-bar-color').trim() ?? "#000000";
@@ -73,19 +73,74 @@ export async function loadSound(url, name) {
         name = url
     }
     global._assetsToLoadCount += 1;
-    let audioElement;
-    
-    await new Promise((resolve, reject) => {
-        audioElement = new Audio();
-        audioElement.src = url;
-        audioElement.onload = () => {
-            global._assetsToLoadDone += 1;
-            resolve();
-        };
-        audioElement.onerror = () => {
-            reject(new Error(`Failed to load sound: ${url}`));
-        };
-    });
+    let audioElement = new Audio();
+    audioElement.src = url;
+    try {
+        await new Promise((resolve, reject) => {
+            audioElement.onload = () => {
+                global._assetsToLoadDone += 1;
+                resolve();
+            };
+            audioElement.onerror = () => {
+                reject(new Error(`Failed to load sound: ${url}`));
+            };
+        });
+    } catch (error) {
+        throw error;
+    }
     sound[name] = audioElement
     return audioElement;
+}
+export async function loadFont(url, name) {
+    if (font[name]) {
+        return font[name]
+    }
+    global._assetsToLoadCount += 1;
+    font[name] = new FontFace(name, `url(${url})`);
+    try {
+        await font[name].load();
+        global._assetsToLoadDone += 1;
+        document.fonts.add(font[name]);
+        return font[name];
+    } catch (error) {
+        throw error;
+    }
+}
+const ColorList = [
+    "black",
+    "white",
+    "red",
+    "green",
+    "blue",
+    "yellow",
+    "cyan",
+    "pink",
+]
+export async function loadColors() {
+    const colorPromises = ColorList.map(color => {
+        const url = `./src/images/color/${color}.png`;
+        global._assetsToLoadCount += 1;
+        return new Promise((resolve, reject) => {
+            const imageElement = new Image();
+            imageElement.src = url;
+            imageElement.onload = () => {
+                setTimeout(() => {
+                    global._assetsToLoadDone += 1;
+                }, 1000 * Math.random());
+                resolve(imageElement);
+            };
+            imageElement.onerror = () => {
+                reject(new Error(`Failed to load color: ${color}`));
+            };
+        });
+    });
+
+    try {
+        const colors = await Promise.all(colorPromises);
+        colors.forEach((imageElement, index) => {
+            color[ColorList[index]] = imageElement;
+        });
+    } catch (error) {
+        throw error;
+    }
 }

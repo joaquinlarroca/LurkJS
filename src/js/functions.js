@@ -98,3 +98,23 @@ export function distance(x1, y1, x2, y2) {
 export function lerp(startValue, endValue, interpolation) {
     return startValue + (endValue - startValue) * interpolation;
 }
+export function shakeScreen(intensity, duration) {
+    if (!global._shakingScreen) {
+        global._shakingScreen = true
+        const matrix = ctx.getTransform()
+        const startX = matrix.e
+        const startY = matrix.f
+        const end = Date.now() + duration
+        const id = setInterval(() => {
+            if (Date.now() < end) {
+                const xShift = (Math.random() * 2 - 1) * intensity
+                const yShift = (Math.random() * 2 - 1) * intensity
+                ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, startX + xShift, startY + yShift)
+            } else {
+                clearInterval(id)
+                ctx.setTransform(matrix)
+                global._shakingScreen = false
+            }
+        }, 1);
+    }
+}

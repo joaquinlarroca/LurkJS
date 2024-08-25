@@ -7,14 +7,17 @@ export let global = {
     _setted_up: false,
     _loop_started: false,
     _fixed_loop_started: false,
+    _shakingScreen: false,
     canvas: {
         marginMultiplier: -1,
     },
     fps: 0,
 }
-export let image = {
-    
-}
+export let image = {};
+export let sound = {};
+export let font = {};
+export let color = {};
+
 export let time = {
     frameCount: 0,
     deltaTime: 0,
