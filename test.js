@@ -1,5 +1,5 @@
 import { global, screen, ctx, canvas, time, image, color } from "./src/js/main.js";
-import { drawPointers, isClicking, keyPressed, mouse, pointers } from "./src/js/listeners.js";
+import { drawPointers, isClicking, isHovering, keyPressed, mouse, pointers } from "./src/js/listeners.js";
 import { camera, hitbox, hitboxCircleFixed, hitboxFixed, object } from "./src/js/classes.js";
 import { loadColors, loadFont, loadImage } from "./src/js/loader.js";
 import { setup, clear, drawtext, shakeScreen } from "./src/js/functions.js";
@@ -23,7 +23,7 @@ let park = new object(image["park"], [0, 0], [1920, 1080])
 let cam = new camera(1344, 0, 576, 324)
 
 window.addEventListener("started", () => {
-
+    //screen.doc.requestFullscreen();
 })
 window.addEventListener("update", () => {
     clear()
@@ -42,10 +42,7 @@ window.addEventListener("update", () => {
         cam.draw()
         cam.drawcropArea()
     }
-    if (keyPressed("space")) {
-        shakeScreen(1, 200)
-    }
-    if (isClicking(circle.hitboxes[3])) {
+    if (isHovering(circle.hitboxes[3])) {
         cam.crop()
         cam.draw()
         cam.drawcropArea()

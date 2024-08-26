@@ -25,6 +25,7 @@ export let time = {
 }
 
 export let screen = {
+    doc: document.documentElement,
     body: document.body,
     loading: {
         background: document.getElementById("_loading_screen"),
