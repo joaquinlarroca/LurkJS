@@ -119,21 +119,61 @@ export function isClicking(hitbox) {
     switch (hitbox.type) {
         case "hitbox-rect":
         case "hitbox-rect-fixed":
-            return pointersDown.some(pointer => hitbox.left <= pointer.x && hitbox.right >= pointer.x && hitbox.top <= pointer.y && hitbox.bottom >= pointer.y);
+            for (let pointer of pointersDown) {
+                if (hitbox.left <= pointer.x && hitbox.right >= pointer.x && hitbox.top <= pointer.y && hitbox.bottom >= pointer.y) {
+                    pointer.down = false;
+                    return true;
+                }
+            }
         case "hitbox-circle":
         case "hitbox-circle-fixed":
-            return pointersDown.some(pointer => pointer.down && distance(pointer.x, pointer.y, hitbox.x, hitbox.y) <= hitbox.radius)
+            for (let pointer of pointersDown) {
+                if (pointer.down && distance(pointer.x, pointer.y, hitbox.x, hitbox.y) <= hitbox.radius) {
+                    pointer.down = false;
+                    return true;
+                }
+            }
+        default:
+            return false
+    }
+}
+export function isPointer(hitbox) {
+    hitbox.updateDimensions()
+    const pointers_ = Object.values(pointers);
+    switch (hitbox.type) {
+        case "hitbox-rect":
+        case "hitbox-rect-fixed":
+            for (let pointer of pointers_) {
+                if (hitbox.left <= pointer.x && hitbox.right >= pointer.x && hitbox.top <= pointer.y && hitbox.bottom >= pointer.y) {
+                    return pointer;
+                }
+            }
+        case "hitbox-circle":
+        case "hitbox-circle-fixed":
+            for (let pointer of pointers_) {
+                if (distance(pointer.x, pointer.y, hitbox.x, hitbox.y) <= hitbox.radius) {
+                    return pointer;
+                }
+            }
         default:
             return false
     }
 }
 export function drawPointers() {
     for (const [key, pointer] of Object.entries(pointers)) {
+        screen.context.fillStyle = "red"
         screen.context.fillRect(pointer.x - 8, pointer.y - 8, 16, 16)
     };
 }
 
 
+pointers["mouse"] = {
+    type: "mouse",
+    down: false,
+    attached: undefined,
+    x: 0,
+    y: 0
+}
 
 function handleMouse(e) {
     let rect = screen.canvas.getBoundingClientRect();
@@ -148,6 +188,7 @@ function handleMouse(e) {
             mouse.x = scaledX
             mouse.y = scaledY
             pointers["mouse"] = {
+                ...pointers["mouse"],
                 type: "mouse",
                 down: true,
                 x: scaledX,
@@ -157,6 +198,10 @@ function handleMouse(e) {
         case 'mousemove':
             mouse.x = scaledX
             mouse.y = scaledY
+            //if (pointers["mouse"].down || mouse.click) {
+            //    pointers["mouse"].down = false
+            //    mouse.click = false
+            //}
             pointers["mouse"] = {
                 ...pointers["mouse"],
                 x: scaledX,
@@ -195,7 +240,7 @@ function handleTouch(e) {
                 pointers[touch.identifier] = {
                     type: "touch",
                     down: true,
-                    holding: undefined,
+                    attached: undefined,
                     x: scaledX,
                     y: scaledY
                 }
