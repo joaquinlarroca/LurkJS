@@ -319,6 +319,102 @@ export class button extends object {
         drawtext(this.text.text, [this.text.pos.align, this.text.pos.baseline], this.text.size, this.text.fontFamily, this.text.baseline, this.text.align, this.angle, this.alpha)
     }
 }
+export class slider2 {
+    constructor(background_texture, thumb_texture, [x, y], [width, height], thumb_width, [minpercentage, maxpercentage], sliderFill, currentpercentage) {
+
+        this.background = background_texture
+        this.maxpercentage = maxpercentage
+        this.minpercentage = minpercentage
+        this.percentage = Math.max(Math.min(currentpercentage, this.maxpercentage), this.minpercentage)
+        this.width = width - thumb_width
+        this.height = height
+        this.x = x;
+        this.y = y
+        this.thumb = {
+            texture: thumb_texture,
+            x: (((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage)) * this.width) + this.x - (thumb_width * ((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage))),
+            y: y,
+            height: height,
+            width: thumb_width,
+            blocked: false,
+            borderRadius: 0,
+        }
+        if (thumb_width > width / 2) {
+            this.thumb.width = height
+        }
+
+        this.drag = {
+            hasSet: false,
+            pointer: undefined,
+            offset: {
+                x: 0,
+                y: 0
+            }
+        }
+
+
+        this.hitboxes = [
+            new hitbox(this, 1),
+            new hitbox(this.thumb, 1)
+        ]
+        this.hitboxes.draw = () => {
+            for (const hitbox of this.hitboxes) {
+                hitbox.draw()
+            }
+        }
+    }
+
+    update() {
+
+
+        if (isHovering(this.hitboxes[0]) && !this.thumb.blocked) {
+            this.hover = true
+            if (isClicking(this.hitboxes[1], true)) {
+                this.click = true
+            }
+            else {
+                this.click = false
+            }
+        }
+        else {
+            this.hover = false
+        }
+
+        if (!this.thumb.blocked) {
+            if (!this.drag.hasSet && this.drag.pointer == undefined) {
+                let pointer = isPointer(this.hitboxes[1])
+                if (pointer.down == true) {
+                    this.drag.hasSet = true
+                    pointer.attached = this
+                    this.drag.pointer = pointer
+                    this.drag.offset.x = pointer.x - this.thumb.x
+                    this.drag.offset.y = pointer.y - this.thumb.y
+                }
+            }
+            else {
+                this.drag.pointer = pointers[this.drag.pointer.key]
+                if (this.drag.pointer.down) {
+                    this.thumb.x = this.drag.pointer.x - this.drag.offset.x
+                    if (this.thumb.x >= this.x + this.width - this.thumb.width) {
+                        this.thumb.x = this.x + this.width - this.thumb.width
+                    }
+                    if (this.thumb.x <= this.x) {
+                        this.thumb.x = this.x
+                    }
+                    this.percentage = ((this.thumb.x - this.x) * (this.maxpercentage - this.minpercentage) / (this.width - this.thumb.width)) + this.minpercentage;
+                }
+                else {
+                    this.drag.hasSet = false
+                    this.drag.pointer.attached = undefined
+                    this.drag.pointer = undefined
+                }
+            }
+            this.percentage = Math.trunc(Math.max(Math.min(this.percentage, this.maxpercentage), this.minpercentage))
+            this.thumb.x = (((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage)) * this.width) + this.x - (this.thumb.width * ((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage)))
+        }
+
+    }
+}
 export class slider {
     constructor(background_texture, thumb_texture, [x, y], [width, height], thumb_width, [minpercentage, maxpercentage], sliderFill, currentpercentage) {
         this.thumb = {
