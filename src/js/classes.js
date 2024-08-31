@@ -321,15 +321,18 @@ export class button extends object {
 }
 export class slider2 {
     constructor(background_texture, thumb_texture, [x, y], [width, height], thumb_width, [minpercentage, maxpercentage], sliderFill, currentpercentage) {
-
         this.background = background_texture
+        this.sliderFill = sliderFill
+
         this.maxpercentage = maxpercentage
         this.minpercentage = minpercentage
         this.percentage = Math.max(Math.min(currentpercentage, this.maxpercentage), this.minpercentage)
-        this.width = width - thumb_width
+
+        this.width = width
         this.height = height
         this.x = x;
         this.y = y
+
         this.thumb = {
             texture: thumb_texture,
             x: (((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage)) * this.width) + this.x - (thumb_width * ((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage))),
@@ -351,8 +354,6 @@ export class slider2 {
                 y: 0
             }
         }
-
-
         this.hitboxes = [
             new hitbox(this, 1),
             new hitbox(this.thumb, 1)
@@ -362,11 +363,25 @@ export class slider2 {
                 hitbox.draw()
             }
         }
+        this.hover = false
+        this.click = false
+
+        this.halfwidth = this.width / 2
+        this.halfheight = this.height / 2
+
+        this.offset = [0.5, 0.5]
+
+        this.anchor = {
+            x: this.x + this.width * this.offset[0],
+            y: this.y + this.height * this.offset[1]
+        }
+        this.angle = 0
+
+        this.alpha = 1
+
+        this.borderRadius = 0
     }
-
     update() {
-
-
         if (isHovering(this.hitboxes[0]) && !this.thumb.blocked) {
             this.hover = true
             if (isClicking(this.hitboxes[1], true)) {
@@ -379,7 +394,6 @@ export class slider2 {
         else {
             this.hover = false
         }
-
         if (!this.thumb.blocked) {
             if (!this.drag.hasSet && this.drag.pointer == undefined) {
                 let pointer = isPointer(this.hitboxes[1])
@@ -409,9 +423,44 @@ export class slider2 {
                     this.drag.pointer = undefined
                 }
             }
-            this.percentage = Math.trunc(Math.max(Math.min(this.percentage, this.maxpercentage), this.minpercentage))
+            this.percentage = Math.max(Math.min(this.percentage, this.maxpercentage), this.minpercentage)
             this.thumb.x = (((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage)) * this.width) + this.x - (this.thumb.width * ((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage)))
+
+            this.halfwidth = this.width / 2
+            this.halfheight = this.height / 2
+
+            this.anchor = {
+                x: this.x + this.width * this.offset[0],
+                y: this.y + this.height * this.offset[1]
+            }
         }
+    }
+    draw() {
+        screen.context.save();
+        screen.context.translate(this.anchor.x, this.anchor.y);
+        screen.context.rotate(0.017453292519943295 * this.angle);
+        screen.context.globalAlpha = this.alpha;
+
+        screen.context.fillStyle = "rgba(0,0,0,0)"
+        screen.context.beginPath();
+        screen.context.roundRect(-this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height, this.borderRadius);
+        screen.context.closePath()
+        screen.context.clip()
+        screen.context.drawImage(this.background, -this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height);
+        screen.context.fill();
+        var percentage_slider = ((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage))
+        screen.context.fillStyle = this.sliderFill
+        screen.context.fillRect(-this.width * this.offset[0], -this.height * this.offset[1], percentage_slider * this.width - percentage_slider * this.thumb.width + this.thumb.width / 2, this.height)
+
+        screen.context.fillStyle = "rgba(0,0,0,0)"
+        screen.context.beginPath();
+        screen.context.roundRect(-this.width * this.offset[0] + this.thumb.x - this.x, -this.thumb.height * this.offset[0], this.thumb.width, this.thumb.height, this.thumb.borderRadius);
+        screen.context.clip()
+        screen.context.closePath()
+        screen.context.drawImage(this.thumb.texture, -this.width * this.offset[0] + this.thumb.x - this.x, -this.thumb.height * this.offset[0], this.thumb.width, this.thumb.height);
+        screen.context.fill();
+
+        screen.context.restore();
 
     }
 }
