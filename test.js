@@ -29,12 +29,12 @@ window.addEventListener("update", () => {
     a.hitboxes.draw()
 
     ctx.fillStyle = "white"
-    drawtext(`FPS ${global.fps}`, [64, 0], 128, "bubbly", "top", "start", 0, 1.0)
-    drawtext(`${Object.keys(pointers).length}`, [64, 128], 128, "bubbly", "top", "start", 0, 1.0)
-    drawtext(`${pointers["mouse"].attached}`, [64, 256], 128, "bubbly", "top", "start", 0, 1.0)
+    drawtext(`FPS ${global.fps}`, [64, 0], 64, "bubbly", "top", "start", 0, 1.0)
+    drawtext(`${Object.keys(pointers).length}`, [64, 128], 64, "bubbly", "top", "start", 0, 1.0)
     btn.update()
     btn.draw()
 
+    slde.update()
     slde.draw()
     slde.hitboxes.draw()
     if(btn.hovered){

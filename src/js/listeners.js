@@ -113,15 +113,17 @@ export function isHovering(hitbox) {
             return false
     }
 }
-export function isClicking(hitbox) {
+export function isClicking(hitbox, disablePointerSet = false) {
     hitbox.updateDimensions()
-    const pointersDown = Object.values(pointers).filter(pointer => pointer.down);
+    const pointersDown = Object.values(pointers).filter(pointer => pointer.down && pointer.attached == undefined);
     switch (hitbox.type) {
         case "hitbox-rect":
         case "hitbox-rect-fixed":
             for (let pointer of pointersDown) {
                 if (hitbox.left <= pointer.x && hitbox.right >= pointer.x && hitbox.top <= pointer.y && hitbox.bottom >= pointer.y) {
-                    pointer.down = false;
+                    if (!disablePointerSet) {
+                        pointer.down = false;
+                    }
                     return true;
                 }
             }
@@ -129,7 +131,9 @@ export function isClicking(hitbox) {
         case "hitbox-circle-fixed":
             for (let pointer of pointersDown) {
                 if (pointer.down && distance(pointer.x, pointer.y, hitbox.x, hitbox.y) <= hitbox.radius) {
-                    pointer.down = false;
+                    if (!disablePointerSet) {
+                        pointer.down = false;
+                    }
                     return true;
                 }
             }
@@ -162,12 +166,13 @@ export function isPointer(hitbox) {
 export function drawPointers() {
     for (const [key, pointer] of Object.entries(pointers)) {
         screen.context.fillStyle = "red"
-        screen.context.fillRect(pointer.x - 8, pointer.y - 8, 16, 16)
+        screen.context.fillRect(pointer.x - 4, pointer.y - 4, 8, 8)
     };
 }
 
 
 pointers["mouse"] = {
+    key: "mouse",
     type: "mouse",
     down: false,
     attached: undefined,
@@ -189,7 +194,6 @@ function handleMouse(e) {
             mouse.y = scaledY
             pointers["mouse"] = {
                 ...pointers["mouse"],
-                type: "mouse",
                 down: true,
                 x: scaledX,
                 y: scaledY
@@ -198,10 +202,6 @@ function handleMouse(e) {
         case 'mousemove':
             mouse.x = scaledX
             mouse.y = scaledY
-            //if (pointers["mouse"].down || mouse.click) {
-            //    pointers["mouse"].down = false
-            //    mouse.click = false
-            //}
             pointers["mouse"] = {
                 ...pointers["mouse"],
                 x: scaledX,
@@ -238,6 +238,7 @@ function handleTouch(e) {
                 const scaledX = (touch.clientX - rect.left) * scaleFactorX;
                 const scaledY = (touch.clientY - rect.top) * scaleFactorY;
                 pointers[touch.identifier] = {
+                    key: touch.identifier,
                     type: "touch",
                     down: true,
                     attached: undefined,

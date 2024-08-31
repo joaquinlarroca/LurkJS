@@ -386,6 +386,7 @@ export class slider {
 
         this.drag = {
             hasSet: false,
+            pointer: undefined,
             offset: {
                 x: 0,
                 y: 0
@@ -394,9 +395,6 @@ export class slider {
 
     }
     update() {
-
-    }
-    draw() {
         if (isHovering(this.hitboxes[0]) && !this.thumb.blocked) {
             this.hover = true
             if (isClicking(this.hitboxes[1])) {
@@ -409,36 +407,39 @@ export class slider {
         else {
             this.hover = false
         }
-        const pointers_ = Object.values(pointers);
-        for (let pointer of pointers_) {
-            if ( ( (isClicking(this.hitboxes[1]) && pointer.attached == undefined) || pointer.attached == this ) && !this.thumb.blocked) {
-                if (!this.drag.hasSet) {
+        if (!this.thumb.blocked) {
+            if (!this.drag.hasSet && this.drag.pointer == undefined) {
+                let pointer = isPointer(this.hitboxes[1])
+                if (pointer.down == true) {
                     this.drag.hasSet = true
                     pointer.attached = this
+                    this.drag.pointer = pointer
                     this.drag.offset.x = pointer.x - this.x
                     this.drag.offset.y = pointer.y - this.y
                 }
-                this.x = pointer.x - this.drag.offset.x
-                if (this.x >= this.thumb.x + this.thumb.width + this.width) {
-                    this.x = this.thumb.x + this.thumb.width + this.width
-                }
-                if (this.x <= this.thumb.x + this.width) {
-                    this.x = this.thumb.x + this.width
-                }
-                this.percentage = Math.round(-((this.thumb.x + this.width - this.x) / this.thumb.width) * (this.maxpercentage - this.minpercentage) + this.minpercentage);
             }
             else {
-                this.drag.hasSet = false
-                this.x = this.thumb.x + ((this.percentage - this.minpercentage) * this.thumb.width / (this.maxpercentage - this.minpercentage)) + this.width;
-            }
-            if (pointer.attached == this && !pointer.down) {
-                pointer.attached = undefined
+                this.drag.pointer = pointers[this.drag.pointer.key]
+                if (this.drag.pointer.down) {
+                    this.x = this.drag.pointer.x - this.drag.offset.x
+                    if (this.x >= this.thumb.x + this.thumb.width + this.width) {
+                        this.x = this.thumb.x + this.thumb.width + this.width
+                    }
+                    if (this.x <= this.thumb.x + this.width) {
+                        this.x = this.thumb.x + this.width
+                    }
+                    this.percentage = -((this.thumb.x + this.width - this.x) / this.thumb.width) * (this.maxpercentage - this.minpercentage) + this.minpercentage;
+                }
+                else {
+                    this.drag.hasSet = false
+                    this.x = this.thumb.x + ((this.percentage - this.minpercentage) * this.thumb.width / (this.maxpercentage - this.minpercentage)) + this.width;
+                    this.drag.pointer.attached = undefined
+                    this.drag.pointer = undefined
+                }
             }
         }
-
-
-
-
+    }
+    draw() {
         this.pos = [this.x + this.width / 2, this.y + this.height / 2]
 
         this.anglex = this.thumb.x + this.thumb.width / 2
