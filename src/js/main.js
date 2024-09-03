@@ -13,6 +13,10 @@ export let global = {
     },
     fps: 0,
 }
+export const engine = {
+    name: "LurkJS",
+    version: "0.0.1",
+}
 export let image = {};
 export let sound = {};
 export let font = {};

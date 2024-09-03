@@ -1,4 +1,4 @@
-import { drawtext } from "./functions.js";
+import { drawtext, isValidColor } from "./functions.js";
 import { isHovering, isClicking, pointers, isPointer } from "./listeners.js";
 import { canvas, global, screen } from "./main.js";
 
@@ -181,7 +181,51 @@ export class hitboxCircleFixed {
 }
 export class object {
     constructor(texture, [x, y], [width, height]) {
-        this.texture = texture ?? null
+        if (typeof texture == "string") {
+            texture = texture.split(":")
+            if (texture[0] == "color") {
+                this.usingColor = true
+                this.color = texture[1]
+            }
+        }
+        else {
+            this.usingColor = false
+            this.texture = texture ?? null
+        }
+
+        let texture_property = this.texture
+        Object.defineProperty(this, 'texture', {
+            get() { return texture_property },
+            set(value) {
+                if (typeof value == "string") {
+                    value = value.split(":")
+                    if (value[0] == "color") {
+                        this.usingColor = true
+                        this.color = value[1]
+                    }
+                }
+                else {
+                    this.usingColor = false
+                    texture_property = value
+                }
+            }
+        });
+        let color_property = this.color
+        Object.defineProperty(this, 'color', {
+            get() { return color_property },
+            set(value) {
+                if (isValidColor(value)) {
+                    this.usingColor = true
+                    this.color = value
+                }
+                else {
+                    this.usingColor = true
+                    this.color = "rgb(255,0,255)"
+                }
+            }
+        });
+
+
         this.x = x ?? 0
         this.y = y ?? 0
         this.offset = [0.5, 0.5]
@@ -242,7 +286,14 @@ export class object {
         screen.context.roundRect(-this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height, this.borderRadius);
         screen.context.closePath()
         screen.context.clip()
-        screen.context.drawImage(this.texture, -this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height);
+        if (this.usingColor) {
+            screen.context.fillStyle = this.color
+            screen.context.roundRect(-this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height, this.borderRadius);
+        }
+        else {
+            screen.context.drawImage(this.texture, -this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height);
+        }
+
         screen.context.fill();
 
         screen.context.restore();
@@ -321,6 +372,106 @@ export class button extends object {
 }
 export class slider {
     constructor(background_texture, thumb_texture, [x, y], [width, height], thumb_width, [minpercentage, maxpercentage], sliderFill, currentpercentage) {
+        this.thumb = {
+            texture: null,
+            color: "rgba(0,0,0,0)",
+            usingColor: false,
+            x: (((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage)) * this.width) + this.x - (thumb_width * ((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage))),
+            y: y,
+            height: height,
+            width: thumb_width,
+            blocked: false,
+            borderRadius: 0,
+        }
+
+        if (typeof background_texture == "string") {
+            background_texture = background_texture.split(":")
+            if (background_texture[0] == "color") {
+                this.usingColor = true
+                this.color = background_texture[1]
+            }
+        }
+        else {
+            this.usingColor = false
+            this.background_texture = background_texture ?? null
+        }
+
+        let texture_property = this.background_texture
+        Object.defineProperty(this, 'background_texture', {
+            get() { return texture_property },
+            set(value) {
+                if (typeof value == "string") {
+                    value = value.split(":")
+                    if (value[0] == "color") {
+                        this.usingColor = true
+                        this.color = value[1]
+                    }
+                }
+                else {
+                    this.usingColor = false
+                    texture_property = value
+                }
+            }
+        });
+        let color_property = this.color
+        Object.defineProperty(this, 'color', {
+            get() { return color_property },
+            set(value) {
+                if (isValidColor(value)) {
+                    this.usingColor = true
+                    this.color = value
+                }
+                else {
+                    this.usingColor = true
+                    this.color = "rgb(255,0,255)"
+                }
+            }
+        });
+
+        if (typeof thumb_texture == "string") {
+            thumb_texture = thumb_texture.split(":")
+            if (thumb_texture[0] == "color") {
+                this.thumb.usingColor = true
+                this.thumb.color = thumb_texture[1]
+            }
+        }
+        else {
+            this.usingColor = false
+            this.thumb.texture = thumb_texture ?? null
+        }
+
+        let texture_property_thumb = this.thumb.texture
+        Object.defineProperty(this, 'background_texture', {
+            get() { return texture_property_thumb },
+            set(value) {
+                if (typeof value == "string") {
+                    value = value.split(":")
+                    if (value[0] == "color") {
+                        this.thumb.usingColor = true
+                        this.thumb.color = value[1]
+                    }
+                }
+                else {
+                    this.thumb.usingColor = false
+                    texture_property_thumb = value
+                }
+            }
+        });
+        let color_property_thumb = this.color
+        Object.defineProperty(this, 'color', {
+            get() { return color_property_thumb },
+            set(value) {
+                if (isValidColor(value)) {
+                    this.thumb.usingColor = true
+                    this.thumb.color = value
+                }
+                else {
+                    this.thumb.usingColor = true
+                    this.thumb.color = "rgb(255,0,255)"
+                }
+            }
+        });
+
         this.background = background_texture
         this.sliderFill = sliderFill
 
@@ -333,15 +484,6 @@ export class slider {
         this.x = x;
         this.y = y
 
-        this.thumb = {
-            texture: thumb_texture,
-            x: (((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage)) * this.width) + this.x - (thumb_width * ((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage))),
-            y: y,
-            height: height,
-            width: thumb_width,
-            blocked: false,
-            borderRadius: 0,
-        }
         if (thumb_width > width / 2) {
             this.thumb.width = height
         }
@@ -406,7 +548,7 @@ export class slider {
                 }
             }
             else {
-                this.drag.pointer = pointers[this.drag.pointer.key]
+                this.drag.pointer = pointers[this.drag.pointer.key] ?? { down: false, attached: undefined, what: console.log("a") }
                 if (this.drag.pointer.down) {
                     this.thumb.x = this.drag.pointer.x - this.drag.offset.x
                     if (this.thumb.x >= this.x + this.width - this.thumb.width) {

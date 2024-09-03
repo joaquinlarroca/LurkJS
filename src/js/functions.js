@@ -118,3 +118,8 @@ export function shakeScreen(intensity, duration) {
         }, 1);
     }
 }
+export function isValidColor(color) {
+    const validate = new Option().style;
+    validate.color = color;
+    return validate.color !== '';
+}

@@ -1,4 +1,4 @@
-import { global, image, screen, sound, font, color } from "./main.js"
+import { global, image, screen, sound, font, color, engine } from "./main.js"
 
 const loadingBarColor = screen.css.computedStyles.getPropertyValue('--loading-bar-done-color').trim() ?? "#A9F249";
 const loadingBackgroundColor = screen.css.computedStyles.getPropertyValue('--loading-bar-color').trim() ?? "#000000";
@@ -6,7 +6,7 @@ screen.loading.logo_bg = loadingBackgroundColor
 
 let load = setInterval(() => {
     var percent = global._assetsToLoadDone / global._assetsToLoadCount * 100
-    document.title = percent.toFixed(0) + "%"
+    document.title = ` ${engine.name} ${engine.version} (${percent.toFixed(0)}%)`
     screen.loading.bar.style.background = `linear-gradient(90deg, ${loadingBarColor} ${percent}%, ${loadingBackgroundColor} ${percent}%)`
     if (global._assetsToLoadCount == global._assetsToLoadDone && true) {
         global._assets_have_loaded = true
