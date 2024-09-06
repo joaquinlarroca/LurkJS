@@ -1,6 +1,6 @@
 import { drawtext, isValidColor } from "./functions.js";
 import { isHovering, isClicking, pointers, isPointer } from "./listeners.js";
-import { canvas, global, screen } from "./main.js";
+import { canvas, global, image, screen } from "./main.js";
 
 export class hitbox {
     constructor(object, sizeMultiplier) {
@@ -187,45 +187,15 @@ export class object {
                 this.usingColor = true
                 this.color = texture[1]
             }
+            else {
+                this.usingColor = false
+                this.texture = image["noTexture"]
+            }
         }
         else {
             this.usingColor = false
             this.texture = texture ?? null
         }
-
-        let texture_property = this.texture
-        Object.defineProperty(this, 'texture', {
-            get() { return texture_property },
-            set(value) {
-                if (typeof value == "string") {
-                    value = value.split(":")
-                    if (value[0] == "color") {
-                        this.usingColor = true
-                        this.color = value[1]
-                    }
-                }
-                else {
-                    this.usingColor = false
-                    texture_property = value
-                }
-            }
-        });
-        let color_property = this.color
-        Object.defineProperty(this, 'color', {
-            get() { return color_property },
-            set(value) {
-                if (isValidColor(value)) {
-                    this.usingColor = true
-                    this.color = value
-                }
-                else {
-                    this.usingColor = true
-                    this.color = "rgb(255,0,255)"
-                }
-            }
-        });
-
-
         this.x = x ?? 0
         this.y = y ?? 0
         this.offset = [0.5, 0.5]
@@ -297,6 +267,23 @@ export class object {
         screen.context.fill();
 
         screen.context.restore();
+    }
+    setTexture(texture) {
+        if (typeof texture == "string") {
+            texture = texture.split(":")
+            if (texture[0] == "color") {
+                this.usingColor = true
+                this.color = texture[1]
+            }
+            else {
+                this.usingColor = false
+                this.texture = image["noTexture"]
+            }
+        }
+        else {
+            this.usingColor = false
+            this.texture = texture ?? null
+        }
     }
 }
 export class button extends object {
@@ -371,7 +358,11 @@ export class button extends object {
     }
 }
 export class slider {
-    constructor(background_texture, thumb_texture, [x, y], [width, height], thumb_width, [minpercentage, maxpercentage], sliderFill, currentpercentage) {
+    constructor(background_texture, thumb_texture, fill_texture, [x, y], [width, height], thumb_width, [minpercentage, maxpercentage], currentpercentage) {
+        this.maxpercentage = maxpercentage
+        this.minpercentage = minpercentage
+        this.percentage = Math.max(Math.min(currentpercentage, this.maxpercentage), this.minpercentage)
+
         this.thumb = {
             texture: null,
             color: "rgba(0,0,0,0)",
@@ -383,101 +374,65 @@ export class slider {
             blocked: false,
             borderRadius: 0,
         }
-
+        this.background = {
+            texture: null,
+            color: "rgba(0,0,0,0)",
+            usingColor: false,
+        }
+        this.fill = {
+            texture: null,
+            color: "rgba(0,0,0,0)",
+            usingColor: false,
+            inverted: false,
+        }
+        // BACKGROUND TEXTURE
         if (typeof background_texture == "string") {
             background_texture = background_texture.split(":")
             if (background_texture[0] == "color") {
-                this.usingColor = true
-                this.color = background_texture[1]
+                this.background.usingColor = true
+                this.background.color = background_texture[1]
+            }
+            else {
+                this.background.usingColor = false
+                this.background.texture = image["noTexture"]
             }
         }
         else {
-            this.usingColor = false
-            this.background_texture = background_texture ?? null
+            this.background.usingColor = false
+            this.background.texture = background_texture ?? null
         }
-
-        let texture_property = this.background_texture
-        Object.defineProperty(this, 'background_texture', {
-            get() { return texture_property },
-            set(value) {
-                if (typeof value == "string") {
-                    value = value.split(":")
-                    if (value[0] == "color") {
-                        this.usingColor = true
-                        this.color = value[1]
-                    }
-                }
-                else {
-                    this.usingColor = false
-                    texture_property = value
-                }
-            }
-        });
-        let color_property = this.color
-        Object.defineProperty(this, 'color', {
-            get() { return color_property },
-            set(value) {
-                if (isValidColor(value)) {
-                    this.usingColor = true
-                    this.color = value
-                }
-                else {
-                    this.usingColor = true
-                    this.color = "rgb(255,0,255)"
-                }
-            }
-        });
-
+        // THUMB TEXTURE
         if (typeof thumb_texture == "string") {
             thumb_texture = thumb_texture.split(":")
             if (thumb_texture[0] == "color") {
                 this.thumb.usingColor = true
                 this.thumb.color = thumb_texture[1]
             }
+            else {
+                this.thumb.usingColor = false
+                this.thumb.texture = image["noTexture"]
+            }
         }
         else {
-            this.usingColor = false
+            this.thumb.usingColor
             this.thumb.texture = thumb_texture ?? null
         }
-
-        let texture_property_thumb = this.thumb.texture
-        Object.defineProperty(this, 'background_texture', {
-            get() { return texture_property_thumb },
-            set(value) {
-                if (typeof value == "string") {
-                    value = value.split(":")
-                    if (value[0] == "color") {
-                        this.thumb.usingColor = true
-                        this.thumb.color = value[1]
-                    }
-                }
-                else {
-                    this.thumb.usingColor = false
-                    texture_property_thumb = value
-                }
+        // FILL TEXTURE
+        if (typeof fill_texture == "string") {
+            fill_texture = fill_texture.split(":")
+            if (fill_texture[0] == "color") {
+                this.fill.usingColor = true
+                this.fill.color = fill_texture[1]
             }
-        });
-        let color_property_thumb = this.color
-        Object.defineProperty(this, 'color', {
-            get() { return color_property_thumb },
-            set(value) {
-                if (isValidColor(value)) {
-                    this.thumb.usingColor = true
-                    this.thumb.color = value
-                }
-                else {
-                    this.thumb.usingColor = true
-                    this.thumb.color = "rgb(255,0,255)"
-                }
+            else {
+                this.fill.usingColor = false
+                this.fill.texture = image["noTexture"]
             }
-        });
-
-        this.background = background_texture
-        this.sliderFill = sliderFill
-
-        this.maxpercentage = maxpercentage
-        this.minpercentage = minpercentage
-        this.percentage = Math.max(Math.min(currentpercentage, this.maxpercentage), this.minpercentage)
+        }
+        else {
+            this.fill.usingColor
+            this.fill.texture = fill_texture ?? null
+        }
 
         this.width = width
         this.height = height
@@ -589,38 +544,112 @@ export class slider {
         screen.context.roundRect(-this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height, this.borderRadius);
         screen.context.closePath()
         screen.context.clip()
-        screen.context.drawImage(this.background, -this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height);
+
+        if (this.background.usingColor) {
+            screen.context.fillStyle = this.background.color
+            screen.context.fillRect(-this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height);
+            screen.context.fillStyle = "rgba(0,0,0,0)"
+        }
+        else {
+            screen.context.drawImage(this.background.texture, -this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height);
+        }
+
         screen.context.fill();
         var percentage_slider = ((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage))
-        screen.context.fillStyle = this.sliderFill
-        screen.context.fillRect(-this.width * this.offset[0], -this.height * this.offset[1], percentage_slider * this.width - percentage_slider * this.thumb.width + this.thumb.width / 2, this.height)
+        var fill = {
+            x: -this.width * this.offset[0],
+            y: -this.height * this.offset[1],
+            width: percentage_slider * this.width - percentage_slider * this.thumb.width + this.thumb.width / 2,
+            height: this.height
 
-        screen.context.fillStyle = "rgba(0,0,0,0)"
+        }
+        if(this.fill.inverted){
+            var inverted_percentage = this.maxpercentage - this.minpercentage - percentage_slider
+            fill.x = -this.width * this.offset[0] + this.width
+            fill.width = -inverted_percentage * this.width + inverted_percentage * this.thumb.width - this.thumb.width / 2
+        }
+        if (this.fill.usingColor) {
+            screen.context.fillStyle = this.fill.color
+            screen.context.fillRect(fill.x, fill.y, fill.width, fill.height);
+            screen.context.fillStyle = "rgba(0,0,0,0)"
+        }
+        else {
+            screen.context.drawImage(this.fill.texture, fill.x, fill.y, fill.width, fill.height);
+        }
         screen.context.beginPath();
         screen.context.roundRect(-this.width * this.offset[0] + this.thumb.x - this.x, -this.height * this.offset[1], this.thumb.width, this.thumb.height, this.thumb.borderRadius);
         screen.context.clip()
         screen.context.closePath()
-        screen.context.drawImage(this.thumb.texture, -this.width * this.offset[0] + this.thumb.x - this.x, -this.height * this.offset[1], this.thumb.width, this.thumb.height);
+        if (this.thumb.usingColor) {
+            screen.context.fillStyle = this.thumb.color
+            screen.context.fillRect(-this.width * this.offset[0] + this.thumb.x - this.x, -this.height * this.offset[1], this.thumb.width, this.thumb.height);
+            screen.context.fillStyle = "rgba(0,0,0,0)"
+        }
+        else {
+            screen.context.drawImage(this.thumb.texture, -this.width * this.offset[0] + this.thumb.x - this.x, -this.height * this.offset[1], this.thumb.width, this.thumb.height);
+        }
         screen.context.fill();
         screen.context.restore();
     }
+    setTexture(background_texture, thumb_texture, fill_texture) {
+        // BACKGROUND TEXTURE
+        if (typeof background_texture == "string") {
+            background_texture = background_texture.split(":")
+            if (background_texture[0] == "color") {
+                this.background.usingColor = true
+                this.background.color = background_texture[1]
+            }
+            else {
+                this.background.usingColor = false
+                this.background.texture = image["noTexture"]
+            }
+        }
+        else {
+            this.background.usingColor = false
+            this.background.texture = background_texture ?? null
+        }
+        // THUMB TEXTURE
+        if (typeof thumb_texture == "string") {
+            thumb_texture = thumb_texture.split(":")
+            if (thumb_texture[0] == "color") {
+                this.thumb.usingColor = true
+                this.thumb.color = thumb_texture[1]
+            }
+            else {
+                this.thumb.usingColor = false
+                this.thumb.texture = image["noTexture"]
+            }
+        }
+        else {
+            this.thumb.usingColor
+            this.thumb.texture = thumb_texture ?? null
+        }
+        // FILL TEXTURE
+        if (typeof fill_texture == "string") {
+            fill_texture = fill_texture.split(":")
+            if (fill_texture[0] == "color") {
+                this.fill.usingColor = true
+                this.fill.color = fill_texture[1]
+            }
+            else {
+                this.fill.usingColor = false
+                this.fill.texture = image["noTexture"]
+            }
+        }
+        else {
+            this.fill.usingColor
+            this.fill.texture = fill_texture ?? null
+        }
+    }
 }
 export class sliderv {
-    constructor(background_texture, thumb_texture, [x, y], [width, height], thumb_height, [minpercentage, maxpercentage], sliderFill, currentpercentage) {
-        this.background = background_texture
-        this.sliderFill = sliderFill
-
+    constructor(background_texture, thumb_texture, fill_texture, [x, y], [width, height], thumb_height, [minpercentage, maxpercentage], currentpercentage) {
         this.maxpercentage = maxpercentage
         this.minpercentage = minpercentage
         this.percentage = Math.max(Math.min(currentpercentage, this.maxpercentage), this.minpercentage)
 
-        this.width = width
-        this.height = height
-        this.x = x;
-        this.y = y
-
         this.thumb = {
-            texture: thumb_texture,
+            texture: null,
             x: x,
             y: (((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage)) * this.height) + this.y - (thumb_height * ((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage))),
             height: thumb_height,
@@ -628,6 +657,71 @@ export class sliderv {
             blocked: false,
             borderRadius: 0,
         }
+        this.background = {
+            texture: null,
+            color: "rgba(0,0,0,0)",
+            usingColor: false,
+        }
+        this.fill = {
+            texture: null,
+            color: "rgba(0,0,0,0)",
+            usingColor: false,
+            inverted: false,
+        }
+        // BACKGROUND TEXTURE
+        if (typeof background_texture == "string") {
+            background_texture = background_texture.split(":")
+            if (background_texture[0] == "color") {
+                this.background.usingColor = true
+                this.background.color = background_texture[1]
+            }
+            else {
+                this.background.usingColor = false
+                this.background.texture = image["noTexture"]
+            }
+        }
+        else {
+            this.background.usingColor = false
+            this.background.texture = background_texture ?? null
+        }
+        // THUMB TEXTURE
+        if (typeof thumb_texture == "string") {
+            thumb_texture = thumb_texture.split(":")
+            if (thumb_texture[0] == "color") {
+                this.thumb.usingColor = true
+                this.thumb.color = thumb_texture[1]
+            }
+            else {
+                this.thumb.usingColor = false
+                this.thumb.texture = image["noTexture"]
+            }
+        }
+        else {
+            this.thumb.usingColor
+            this.thumb.texture = thumb_texture ?? null
+        }
+        // FILL TEXTURE
+        if (typeof fill_texture == "string") {
+            fill_texture = fill_texture.split(":")
+            if (fill_texture[0] == "color") {
+                this.fill.usingColor = true
+                this.fill.color = fill_texture[1]
+            }
+            else {
+                this.fill.usingColor = false
+                this.fill.texture = image["noTexture"]
+            }
+        }
+        else {
+            this.fill.usingColor
+            this.fill.texture = fill_texture ?? null
+        }
+        this.width = width
+        this.height = height
+        this.x = x;
+        this.y = y
+
+
         if (thumb_height > height / 2) {
             this.thumb.height = width
         }
@@ -732,20 +826,98 @@ export class sliderv {
         screen.context.roundRect(-this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height, this.borderRadius);
         screen.context.closePath()
         screen.context.clip()
-        screen.context.drawImage(this.background, -this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height);
+        if (this.background.usingColor) {
+            screen.context.fillStyle = this.background.color
+            screen.context.fillRect(-this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height);
+        }
+        else {
+            screen.context.drawImage(this.background.texture, -this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height);
+        }
         screen.context.fill();
         var percentage_slider = ((this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage))
-        screen.context.fillStyle = this.sliderFill
-        screen.context.fillRect(-this.width * this.offset[0], -this.height * this.offset[1], this.width, percentage_slider * this.height - percentage_slider * this.thumb.height + this.thumb.height / 2)
+        var fill = {
+            x: -this.width * this.offset[0],
+            y: -this.height * this.offset[1],
+            width: this.width,
+            height: percentage_slider * this.height - percentage_slider * this.thumb.height + this.thumb.height / 2
 
+        }
+        if(this.fill.inverted){
+            var inverted_percentage = this.maxpercentage - this.minpercentage - percentage_slider
+            fill.y = -this.height * this.offset[0] + this.height
+            fill.height = -inverted_percentage * this.height + inverted_percentage * this.thumb.height - this.thumb.height / 2
+        }
+        if (this.fill.usingColor) {
+            screen.context.fillStyle = this.fill.color
+            screen.context.fillRect(fill.x, fill.y, fill.width, fill.height);
+        }
+        else {
+            screen.context.drawImage(this.fill.texture, fill.x, fill.y, fill.width, fill.height);
+        }
         screen.context.fillStyle = "rgba(0,0,0,0)"
         screen.context.beginPath();
         screen.context.roundRect(-this.width * this.offset[0], -this.height * this.offset[1] + this.thumb.y - this.y, this.thumb.width, this.thumb.height, this.thumb.borderRadius);
         screen.context.clip()
         screen.context.closePath()
-        screen.context.drawImage(this.thumb.texture, -this.width * this.offset[0], -this.height * this.offset[1] + this.thumb.y - this.y, this.thumb.width, this.thumb.height);
+        if (this.thumb.usingColor) {
+            screen.context.fillStyle = this.thumb.color
+            screen.context.fillRect(-this.width * this.offset[0], -this.height * this.offset[1] + this.thumb.y - this.y, this.thumb.width, this.thumb.height);
+        }
+        else {
+            screen.context.drawImage(this.thumb.texture, -this.width * this.offset[0], -this.height * this.offset[1] + this.thumb.y - this.y, this.thumb.width, this.thumb.height);
+        }
         screen.context.fill();
         screen.context.restore();
+    }
+    setTexture(background_texture, thumb_texture, fill_texture) {
+        // BACKGROUND TEXTURE
+        if (typeof background_texture == "string") {
+            background_texture = background_texture.split(":")
+            if (background_texture[0] == "color") {
+                this.background.usingColor = true
+                this.background.color = background_texture[1]
+            }
+            else {
+                this.background.usingColor = false
+                this.background.texture = image["noTexture"]
+            }
+        }
+        else {
+            this.background.usingColor = false
+            this.background.texture = background_texture ?? null
+        }
+        // THUMB TEXTURE
+        if (typeof thumb_texture == "string") {
+            thumb_texture = thumb_texture.split(":")
+            if (thumb_texture[0] == "color") {
+                this.thumb.usingColor = true
+                this.thumb.color = thumb_texture[1]
+            }
+            else {
+                this.thumb.usingColor = false
+                this.thumb.texture = image["noTexture"]
+            }
+        }
+        else {
+            this.thumb.usingColor
+            this.thumb.texture = thumb_texture ?? null
+        }
+        // FILL TEXTURE
+        if (typeof fill_texture == "string") {
+            fill_texture = fill_texture.split(":")
+            if (fill_texture[0] == "color") {
+                this.fill.usingColor = true
+                this.fill.color = fill_texture[1]
+            }
+            else {
+                this.fill.usingColor = false
+                this.fill.texture = image["noTexture"]
+            }
+        }
+        else {
+            this.fill.usingColor
+            this.fill.texture = fill_texture ?? null
+        }
     }
 }
 export class camera {

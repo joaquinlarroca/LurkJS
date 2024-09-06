@@ -1,5 +1,5 @@
 import { global, screen, canvas, ctx, time } from "./main.js";
-import { waitForLoad } from "./loader.js";
+import { loadImage, waitForLoad } from "./loader.js";
 
 const canvasBG = screen.css.computedStyles.getPropertyValue('--canvas-bg').trim() ?? "#000000";
 
@@ -7,6 +7,7 @@ export async function setup(width, height, marginMultiplier = 1, listeners = tru
     if (!global._setted_up) {
         screen.canvas.width = width;
         screen.canvas.height = height;
+        loadImage("./src/images/noTexture.png", "noTexture")
     }
     await waitForLoad();
     if (typeof width == "number" && typeof height == "number" && width > 0 && height > 0) {

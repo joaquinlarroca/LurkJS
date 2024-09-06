@@ -10,14 +10,16 @@ await loadFont("./bubbly.ttf", "bubbly")
 
 await setup(1920, 1080, 0.99, true);
 
-let a = new object(image["bunny"], [0, 0], [100, 100])
+let a = new object("", [0, 0], [100, 100])
 let btn = new button("color: red", [200, 200], [200, 100], ["test", "white", 64, "bubbly"], 500)
-let slde = new slider(image["bunny"], image["bunny"], [200, 400], [300, 50], 50, [0, 1], "rgb(0,255,0", 0)
+let slde = new slider(image["bunny"], image["bunny"], "none", [200, 400], [300, 50], 50, [0, 1], 0)
 slde.thumb.borderRadius = 32
 slde.borderRadius = 32
-let sldd = new sliderv(image["bunny"], image["bunny"], [700, 400], [25, 500], 75, [0, 1], "white", 0)
+slde.fill.inverted = true
+let sldd = new sliderv(image["bunny"], image["bunny"], "none", [700, 400], [25, 500], 75, [0, 1], 0)
 sldd.thumb.borderRadius = 500
 sldd.borderRadius = 500
+sldd.fill.inverted = true
 
 let park = new object(image["park"], [0, 0], [1920, 1080])
 
@@ -87,7 +89,4 @@ window.addEventListener("update", () => {
     if (keyPressed("w")) {
         a.y -= 7
     }
-
-
-
 })
