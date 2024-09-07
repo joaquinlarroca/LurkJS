@@ -4,6 +4,7 @@ import { canvas, global, image, screen } from "./main.js";
 
 export class hitbox {
     constructor(object, sizeMultiplier) {
+        global._hitboxes.push(this)
         this.type = "hitbox-rect"
         this.object = object ?? null
         this.sizeMultiplier = sizeMultiplier ?? 1
@@ -50,6 +51,7 @@ export class hitbox {
 }
 export class hitboxFixed {
     constructor([x, y], [width, height]) {
+        global._hitboxes.push(this)
         this.type = "hitbox-rect-fixed"
         this.x = x ?? 0
         this.y = y ?? 0
@@ -97,6 +99,7 @@ export class hitboxFixed {
 }
 export class hitboxCircle {
     constructor(object, sizeMultiplier) {
+        global._hitboxes.push(this)
         this.type = "hitbox-circle"
         this.object = object ?? null
         this.sizeMultiplier = sizeMultiplier ?? 1
@@ -140,6 +143,7 @@ export class hitboxCircle {
 }
 export class hitboxCircleFixed {
     constructor([x, y], radius) {
+        global._hitboxes.push(this)
         this.type = "hitbox-circle-fixed"
         this.x = x ?? 0
         this.y = y ?? 0
@@ -181,6 +185,7 @@ export class hitboxCircleFixed {
 }
 export class object {
     constructor(texture, [x, y], [width, height]) {
+        global._objects.push(this)
         if (typeof texture == "string") {
             texture = texture.split(":")
             if (texture[0] == "color") {
@@ -289,7 +294,7 @@ export class object {
 export class button extends object {
     constructor(texture, [x, y], [width, height], [text, color, size, fontFamily], time) {
         super(texture, [x, y], [width, height])
-
+        global._buttons.push(this)
         this.clicked = false
         this.hovered = false
         this.disabled = false
@@ -359,6 +364,7 @@ export class button extends object {
 }
 export class slider {
     constructor(background_texture, thumb_texture, fill_texture, [x, y], [width, height], thumb_width, [minpercentage, maxpercentage], currentpercentage) {
+        global._sliders.push(this)
         this.maxpercentage = maxpercentage
         this.minpercentage = minpercentage
         this.percentage = Math.max(Math.min(currentpercentage, this.maxpercentage), this.minpercentage)
@@ -644,6 +650,7 @@ export class slider {
 }
 export class sliderv {
     constructor(background_texture, thumb_texture, fill_texture, [x, y], [width, height], thumb_height, [minpercentage, maxpercentage], currentpercentage) {
+        global._sliders.push(this)
         this.maxpercentage = maxpercentage
         this.minpercentage = minpercentage
         this.percentage = Math.max(Math.min(currentpercentage, this.maxpercentage), this.minpercentage)
@@ -922,6 +929,7 @@ export class sliderv {
 }
 export class camera {
     constructor(x, y, w, h) {
+        global._cameras.push(this)
         this.x = x
         this.y = y
         this.width = w
@@ -980,6 +988,7 @@ export class timeout {
 }
 export class sound {
     constructor(sound, playbackRate, volume, loop) {
+        global._sounds.push(this)
         this.sound = new Audio()
         this.sound.src = sound
         this.sound.loop = loop ?? false
@@ -1020,6 +1029,7 @@ export class sound {
 }
 export class sound2 {
     constructor(sound, playbackRate, volume) {
+        global._sounds.push(this)
         this.playbackRate = playbackRate ?? 1.0
         this.volume = volume ?? 1.0
         this.audioSrc = sound;

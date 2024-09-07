@@ -1,0 +1,42 @@
+@font-face {
+    font-family: 'Fira Code';
+    src: url("./FiraCode-Regular.ttf");
+}
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+._gui_debug_info {
+    position: fixed;
+    bottom:  0;
+    width: 100svw;
+    height: 25svh;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #FFFFFF;
+    font-family: "Fira Code", sans-serif;
+    font-size: 0.7em;
+}
+._gui_debug_tab {
+    width: calc(100% - 1.25rem);
+    height: 1.25rem;
+    background-color: #222;
+    border: #444 1px solid;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    padding-left: 0.75em;
+    padding: 0 0.75em;
+}
+._gui_debug_tab_button{
+    width: 10%;
+    height: 100%;
+    background-color: red;
+    
+}
+._gui_debug_tab_downarrow{
+    width: 2em;
+}

@@ -40,7 +40,7 @@ export async function setup(width, height, marginMultiplier = 1, targedfixedFps 
         if (!global._setted_up) {
             global._setted_up = true;
             global.canvas.marginMultiplier = marginMultiplier;
-            document.body.append(screen.canvas);
+            global._append_to.append(screen.canvas);
 
             let timestamp = performance.now();
 

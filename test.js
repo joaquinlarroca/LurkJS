@@ -3,22 +3,24 @@ import { drawPointers, isClicking, isHovering, keyPressed, mouse, pointers } fro
 import { button, camera, hitbox, hitboxCircleFixed, hitboxFixed, object, slider, sliderv } from "./src/js/classes.js";
 import { loadFont, loadImage } from "./src/js/loader.js";
 import { setup, clear, drawtext, shakeScreen, lerp } from "./src/js/functions.js";
+import { gui } from "./src/plugins/gui/gui.js";
 
-await loadImage("./src/bunny.png", "bunny")
+await loadImage("./src/images/bunny.png", "bunny")
 await loadImage("./bg.png", "park")
 await loadFont("./bubbly.ttf", "bubbly")
 
 await setup(1920, 1080, 0.99, 70, false);
 
-let a = new object("", [0, 0], [100, 100])
+let a = new object(image["bunny"], [0, 0], [100, 100])
 a.vel = { x: 0, y: 0 }
 a.dir = 1
 let btn = new button("color: red", [200, 200], [200, 100], ["test", "white", 64, "bubbly"], 500)
-let slde = new slider(image["bunny"], image["bunny"], "none", [200, 400], [300, 50], 50, [-1, 1], 0)
-slde.thumb.borderRadius = 32
-slde.borderRadius = 32
+btn.borderRadius = 8
+let slde = new slider("color:#eee", "color:#333", "color:#00dd00", [200, 400], [300, 50], 50, [-1, 1], 0)
+slde.thumb.borderRadius = 16
+slde.borderRadius = 16
 slde.fill.inverted = false
-let sldd = new sliderv(image["bunny"], image["bunny"], "none", [700, 400], [25, 500], 75, [-1, 1], 0)
+let sldd = new sliderv("color:#222", "color:#555", "color:#222", [700, 400], [25, 500], 75, [0, 1], 0)
 sldd.thumb.borderRadius = 500
 sldd.borderRadius = 500
 sldd.fill.inverted = false
@@ -46,8 +48,6 @@ window.addEventListener("update", () => {
 
     slde.update()
     slde.draw()
-    //slde.hitboxes.draw()
-    slde.y = savedY - savedY * sldd.percentage
     if (slde.hover) {
         cam.crop()
         cam.draw()
@@ -55,13 +55,12 @@ window.addEventListener("update", () => {
 
     sldd.update()
     sldd.draw()
-    //sldd.hitboxes.draw()
 
     if (btn.hovered) {
-        btn.setTexture("color: blue")
+        btn.setTexture("color: #36b213")
     }
     else {
-        btn.setTexture("color: red")
+        btn.setTexture("color: #2d9111")
     }
     if (btn.clicked) {
         btn.text.text = "clicked"
@@ -69,31 +68,32 @@ window.addEventListener("update", () => {
         shakeScreen(5, 50)
     }
     else {
-        btn.text.text = "test"
+        btn.text.text = "CLICK"
         btn.text.size = 64
     }
-
+    if(keyPressed(" ")){
+        a.hitboxes.draw()
+        btn.hitboxes.draw()
+        slde.hitboxes.draw()
+        sldd.hitboxes.draw()
+    }
     drawPointers()
-    if (keyPressed("arrowup")) {
-        slde.percentage += 1
-    }
-    if (keyPressed("arrowdown")) {
-        slde.percentage -= 1
-    }
 })
 window.addEventListener("fixedUpdate", () => {
-    a.vel.y += 1000 * time.fixedDeltaTime
+    a.vel.y += 1500 * time.fixedDeltaTime
 
     if (keyPressed("a")) {
-        a.vel.x -= 1500 * time.fixedDeltaTime
+        a.vel.x -= 2000 * time.fixedDeltaTime
         a.dir = -1
+        a.scale = [1, -1]
     }
     if (keyPressed("d")) {
-        a.vel.x += 1500 * time.fixedDeltaTime
+        a.vel.x += 2000 * time.fixedDeltaTime
         a.dir = 1
+        a.scale = [1, 1]
     }
     if (keyPressed("w")) {
-        a.vel.y -= 2750 * time.fixedDeltaTime
+        a.vel.y -= 4000 * time.fixedDeltaTime
     }
     a.angle = Math.atan2(a.vel.y / 500, a.dir) * (180 / Math.PI)
     a.vel.y = Math.max(Math.min(a.vel.y, 1000), -1000)

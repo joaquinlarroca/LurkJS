@@ -1,4 +1,5 @@
 export let global = {
+    _append_to: document.body,
     _assetsToLoadCount: 0,
     _assetsToLoadDone: 0,
     _assets_have_loaded: false,
@@ -12,6 +13,13 @@ export let global = {
         marginMultiplier: -1,
     },
     fps: 0,
+    _hitboxes: [],
+    _objects: [],
+    _buttons: [],
+    _sliders: [],
+    _cameras: [],
+    _sounds: [],
+    _plugins: [],
 }
 export const engine = {
     name: "LurkJS",
