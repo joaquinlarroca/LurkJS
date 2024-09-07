@@ -20,12 +20,13 @@ export const engine = {
 export let image = {};
 export let sound = {};
 export let font = {};
-export let color = {};
 
 export let time = {
     frameCount: 0,
     deltaTime: 0,
     time: 0,
+    scale: 1,
+    fixedDeltaTime: 0,
 }
 
 export let screen = {

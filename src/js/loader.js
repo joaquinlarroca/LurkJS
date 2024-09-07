@@ -1,4 +1,4 @@
-import { global, image, screen, sound, font, color, engine } from "./main.js"
+import { global, image, screen, sound, font, engine } from "./main.js"
 
 const loadingBarColor = screen.css.computedStyles.getPropertyValue('--loading-bar-done-color').trim() ?? "#A9F249";
 const loadingBackgroundColor = screen.css.computedStyles.getPropertyValue('--loading-bar-color').trim() ?? "#000000";
@@ -102,44 +102,6 @@ export async function loadFont(url, name) {
         global._assetsToLoadDone += 1;
         document.fonts.add(font[name]);
         return font[name];
-    } catch (error) {
-        throw error;
-    }
-}
-const ColorList = [
-    "black",
-    "white",
-    "red",
-    "green",
-    "blue",
-    "yellow",
-    "cyan",
-    "pink",
-]
-export async function loadColors() {
-    const colorPromises = ColorList.map(color => {
-        const url = `./src/images/color/${color}.png`;
-        global._assetsToLoadCount += 1;
-        return new Promise((resolve, reject) => {
-            const imageElement = new Image();
-            imageElement.src = url;
-            imageElement.onload = () => {
-                setTimeout(() => {
-                    global._assetsToLoadDone += 1;
-                }, 1000 * Math.random());
-                resolve(imageElement);
-            };
-            imageElement.onerror = () => {
-                reject(new Error(`Failed to load color: ${color}`));
-            };
-        });
-    });
-
-    try {
-        const colors = await Promise.all(colorPromises);
-        colors.forEach((imageElement, index) => {
-            color[ColorList[index]] = imageElement;
-        });
     } catch (error) {
         throw error;
     }

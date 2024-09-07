@@ -3,7 +3,7 @@ import { loadImage, waitForLoad } from "./loader.js";
 
 const canvasBG = screen.css.computedStyles.getPropertyValue('--canvas-bg').trim() ?? "#000000";
 
-export async function setup(width, height, marginMultiplier = 1, listeners = true) {
+export async function setup(width, height, marginMultiplier = 1, targedfixedFps = 70, listeners = true) {
     if (!global._setted_up) {
         screen.canvas.width = width;
         screen.canvas.height = height;
@@ -56,6 +56,18 @@ export async function setup(width, height, marginMultiplier = 1, listeners = tru
                 requestAnimationFrame(update);
             }
             requestAnimationFrame(update);
+
+            let fixedtimestamp = performance.now();
+            let fixedcurrentTimestamp = 0
+            function fixedupdate(fixedcurrentTimestamp) {
+                let fixeddeltaTime = (fixedcurrentTimestamp - fixedtimestamp) / 1000
+                time.fixedDeltaTime = fixeddeltaTime;
+                fixedtimestamp = fixedcurrentTimestamp;
+                window.dispatchEvent(new CustomEvent('fixedUpdate'));
+            }
+            setInterval(() => {
+                fixedupdate(performance.now());
+            }, 1000 / targedfixedFps);
         }
 
 
@@ -111,12 +123,13 @@ export function shakeScreen(intensity, duration) {
                 const xShift = (Math.random() * 2 - 1) * intensity
                 const yShift = (Math.random() * 2 - 1) * intensity
                 ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, startX + xShift, startY + yShift)
-            } else {
+            }
+            else {
                 clearInterval(id)
                 ctx.setTransform(matrix)
                 global._shakingScreen = false
             }
-        }, 1);
+        }, 0);
     }
 }
 export function isValidColor(color) {
