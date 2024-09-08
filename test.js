@@ -9,7 +9,7 @@ await loadImage("./src/images/bunny.png", "bunny")
 await loadImage("./bg.png", "park")
 await loadFont("./bubbly.ttf", "bubbly")
 
-await setup(1920, 1080, 0.99, 70, false);
+await setup(1920, 1080, 0.99, 60);
 
 let a = new object(image["bunny"], [0, 0], [100, 100])
 a.vel = { x: 0, y: 0 }
@@ -28,8 +28,6 @@ sldd.fill.inverted = false
 let park = new object(image["park"], [0, 0], [1920, 1080])
 
 let cam = new camera(1344, 0, 576, 324)
-
-let savedY = slde.y
 window.addEventListener("started", () => {
     //screen.doc.requestFullscreen();
 })
@@ -41,8 +39,8 @@ window.addEventListener("update", () => {
     //a.hitboxes.draw()
 
     ctx.fillStyle = "white"
-    drawtext(`FPS ${(1 / time.fixedDeltaTime).toFixed(0)}`, [64, 0], 64, "bubbly", "top", "start", 0, 1.0)
-    drawtext(`${sldd.percentage}`, [64, 128], 64, "bubbly", "top", "start", 0, 1.0)
+    drawtext(`FPS ${(1/time.fixedDeltaTime).toFixed(0)}`, [64, 0], 64, "bubbly", "top", "start", 0, 1.0)
+    drawtext(`${global._disable_mouse_events}`, [64, 128], 64, "bubbly", "top", "start", 0, 1.0)
     btn.update()
     btn.draw()
 
@@ -71,7 +69,7 @@ window.addEventListener("update", () => {
         btn.text.text = "CLICK"
         btn.text.size = 64
     }
-    if(keyPressed(" ")){
+    if (keyPressed(" ")) {
         a.hitboxes.draw()
         btn.hitboxes.draw()
         slde.hitboxes.draw()

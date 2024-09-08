@@ -1,5 +1,6 @@
 export let global = {
     _append_to: document.body,
+    _disable_mouse_events: false,
     _assetsToLoadCount: 0,
     _assetsToLoadDone: 0,
     _assets_have_loaded: false,

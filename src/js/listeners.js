@@ -12,10 +12,6 @@ export let preventKeys = [
     "Shift",
     "Alt",
     "Meta",
-    "ArrowLeft",
-    "ArrowRight",
-    "ArrowUp",
-    "ArrowDown",
     "Enter",
     "Escape",
     "Backspace",
@@ -181,42 +177,51 @@ pointers["mouse"] = {
 }
 
 function handleMouse(e) {
-    let rect = screen.canvas.getBoundingClientRect();
-    const scaleFactorX = screen.canvas.width / rect.width;
-    const scaleFactorY = screen.canvas.height / rect.height;
-    const scaledX = (e.clientX - rect.left) * scaleFactorX;
-    const scaledY = (e.clientY - rect.top) * scaleFactorY;
-    e.preventDefault()
-    switch (e.type) {
-        case 'mousedown':
-            mouse.click = true
-            mouse.x = scaledX
-            mouse.y = scaledY
-            pointers["mouse"] = {
-                ...pointers["mouse"],
-                down: true,
-                x: scaledX,
-                y: scaledY
-            }
-            break;
-        case 'mousemove':
-            mouse.x = scaledX
-            mouse.y = scaledY
-            pointers["mouse"] = {
-                ...pointers["mouse"],
-                x: scaledX,
-                y: scaledY
-            }
-            break;
-        case 'mouseup':
-            mouse.click = false
-            pointers["mouse"].down = false
-            break;
-    }
-}
+    if(!global._disable_mouse_events){
+        let rect = screen.canvas.getBoundingClientRect();
+        const scaleFactorX = screen.canvas.width / rect.width;
+        const scaleFactorY = screen.canvas.height / rect.height;
+        const scaledX = (e.clientX - rect.left) * scaleFactorX;
+        const scaledY = (e.clientY - rect.top) * scaleFactorY;
+        e.preventDefault()
+        switch (e.type) {
+            case 'mousedown':
+                mouse.click = true
+                mouse.x = scaledX;
+                mouse.y = scaledY;
+                pointers["mouse"] = {
+                    ...pointers["mouse"],
+                    down: true,
+                    x: scaledX,
+                    y: scaledY
+                };
+                break;
+            case 'mousemove':
+                mouse.x = scaledX;
+                mouse.y = scaledY;
+                pointers["mouse"] = {
+                    ...pointers["mouse"],
+                    x: scaledX,
+                    y: scaledY
+                };
+                break;
+            case 'mouseup':
+                mouse.click = false;
+                pointers["mouse"].down = false;
+                break;
+        };
+    };
+};
 window.addEventListener("mousedown", handleMouse);
 window.addEventListener("mousemove", handleMouse);
 window.addEventListener("mouseup", handleMouse);
+screen.canvas.addEventListener("mouseover", () => {
+    global._disable_mouse_events = false;
+});
+
+screen.canvas.addEventListener("mouseout", () => {
+    global._disable_mouse_events = true;
+});
 
 window.addEventListener('contextmenu', (event) => {
     if (mouse.preventRightClick) {
@@ -244,8 +249,8 @@ function handleTouch(e) {
                     attached: undefined,
                     x: scaledX,
                     y: scaledY
-                }
-            }
+                };
+            };
             break;
         case "touchmove":
             for (var i = 0; i < e.changedTouches.length; i++) {
@@ -257,19 +262,18 @@ function handleTouch(e) {
                     down: false,
                     x: scaledX,
                     y: scaledY
-                }
-            }
+                };
+            };
             break;
         case "touchend":
         case "touchcancel":
             for (let i = 0; i < e.changedTouches.length; i++) {
                 let touch = e.changedTouches[i];
                 delete pointers[touch.identifier];
-            }
+            };
             break;
-    }
-
-}
+    };
+};
 window.addEventListener("touchstart", handleTouch);
 window.addEventListener("touchmove", handleTouch);
 window.addEventListener("touchend", handleTouch);

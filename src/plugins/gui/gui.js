@@ -27,15 +27,26 @@ gui.debug_tab.className = "_gui_debug_tab"
 gui.debug_tab_buttons.className = "_gui_debug_tab_button"
 gui.debug_tab_downarrow.className = "_gui_debug_tab_downarrow"
 gui.debug_tab_downarrow.src = "./src/plugins/gui/chevron-down.svg"
+gui.debug_container.className = "_gui_debug_container"
 
-gui.debug_tab.innerHTML = `${info.name} ${info.version}`
-
+gui.debug_tab.innerHTML = `<div> ${info.name} <a style='color:#bbb'>${info.version}</a> </div>`
 
 document.head.appendChild(gui.css_link)
 
+gui.debug_tab_downarrow.onclick = () => {
+    if (gui.debug_container.style.display == "none") {
+        gui.debug_container.style.display = "flex";
+        gui.debug_tab_downarrow.style.transform = "rotate(0deg)"
+    }
+    else {
+        gui.debug_container.style.display = "none";
+        gui.debug_tab_downarrow.style.transform = "rotate(180deg)"
+    }
+}
+
 
 document.body.appendChild(gui.debug_info)
-
 gui.debug_info.appendChild(gui.debug_tab)
+gui.debug_info.appendChild(gui.debug_container)
 gui.debug_tab.appendChild(gui.debug_tab_buttons)
 gui.debug_tab_buttons.appendChild(gui.debug_tab_downarrow)

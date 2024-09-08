@@ -1,13 +1,13 @@
-import { global, screen, canvas, ctx, time } from "./main.js";
+import { global, screen, canvas, time } from "./main.js";
 import { loadImage, waitForLoad } from "./loader.js";
 
 const canvasBG = screen.css.computedStyles.getPropertyValue('--canvas-bg').trim() ?? "#000000";
 
-export async function setup(width, height, marginMultiplier = 1, targedfixedFps = 70, listeners = true) {
+export async function setup(width, height, marginMultiplier = 1, targedfixedFps = 60) {
     if (!global._setted_up) {
         screen.canvas.width = width;
         screen.canvas.height = height;
-        loadImage("./src/images/noTexture.png", "noTexture")
+        loadImage("./src/images/noTexture.png", "noTexture");
     }
     await waitForLoad();
     if (typeof width == "number" && typeof height == "number" && width > 0 && height > 0) {
@@ -43,41 +43,40 @@ export async function setup(width, height, marginMultiplier = 1, targedfixedFps 
             global._append_to.append(screen.canvas);
 
             let timestamp = performance.now();
-
+            let fixedTimeStamp = performance.now();
+            let accumulator = 0;
+            let fixedDeltaTime = 1 / targedfixedFps;
             function update(currentTimestamp) {
                 time.frameCount += 1
-                let deltaTime = (currentTimestamp - timestamp) / 1000
+                let deltaTime = (currentTimestamp - timestamp) / 1000;
                 time.deltaTime = deltaTime;
-                time.time += deltaTime
+                time.time += deltaTime;
                 global.fps = (1 / deltaTime).toFixed(0);
                 timestamp = currentTimestamp;
+
+                accumulator += deltaTime;
+                while (accumulator >= fixedDeltaTime) {
+                    const currentTime = performance.now();
+                    time.fixedDeltaTime = (currentTime - fixedTimeStamp) / 1000;
+                    fixedTimeStamp = currentTime;
+                    window.dispatchEvent(new CustomEvent('fixedUpdate'));
+                    accumulator -= fixedDeltaTime;
+                }
                 window.dispatchEvent(new CustomEvent('update'));
                 window.dispatchEvent(new Event('afterUpdate'));
                 requestAnimationFrame(update);
             }
             requestAnimationFrame(update);
-
-            let fixedtimestamp = performance.now();
-            let fixedcurrentTimestamp = 0
-            function fixedupdate(fixedcurrentTimestamp) {
-                let fixeddeltaTime = (fixedcurrentTimestamp - fixedtimestamp) / 1000
-                time.fixedDeltaTime = fixeddeltaTime;
-                fixedtimestamp = fixedcurrentTimestamp;
-                window.dispatchEvent(new CustomEvent('fixedUpdate'));
-            }
-            setInterval(() => {
-                fixedupdate(performance.now());
-            }, 1000 / targedfixedFps);
         }
 
 
     }
 }
 export function clear() {
-    screen.context.save()
-    screen.context.fillStyle = canvasBG
-    screen.context.fillRect(0, 0, screen.canvas.width, screen.canvas.height)
-    screen.context.restore()
+    screen.context.save();
+    screen.context.fillStyle = canvasBG;
+    screen.context.fillRect(0, 0, screen.canvas.width, screen.canvas.height);
+    screen.context.restore();
 }
 export function drawtext(text = "undefined", [x = 0, y = 0], fontSize = 24, fontFamily = "sans-serif", baseline = "top", textAlign = "start", angle = 0, alpha = 1.0) {
     screen.context.save();
@@ -98,35 +97,35 @@ export function sortAndDrawQueuedObjects() {
     }
 }
 export function measureTextWidth(text, fontSize, fontFamily) {
-    screen.context.save()
-    text = text.toString()
+    screen.context.save();
+    text = text.toString();
     screen.context.font = `${fontSize}px ${fontFamily}`;
     const textMetrics = screen.context.measureText(text);
-    screen.context.restore()
+    screen.context.restore();
     return textMetrics.width;
 }
 export function distance(x1, y1, x2, y2) {
-    return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+    return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
 }
 export function lerp(startValue, endValue, interpolation) {
     return startValue + (endValue - startValue) * interpolation;
 }
 export function shakeScreen(intensity, duration) {
     if (!global._shakingScreen) {
-        global._shakingScreen = true
-        const matrix = ctx.getTransform()
-        const startX = matrix.e
-        const startY = matrix.f
-        const end = Date.now() + duration
+        global._shakingScreen = true;
+        const matrix = screen.context.getTransform();
+        const startX = matrix.e;
+        const startY = matrix.f;
+        const end = Date.now() + duration;
         const id = setInterval(() => {
             if (Date.now() < end) {
-                const xShift = (Math.random() * 2 - 1) * intensity
-                const yShift = (Math.random() * 2 - 1) * intensity
-                ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, startX + xShift, startY + yShift)
+                const xShift = (Math.random() * 2 - 1) * intensity;
+                const yShift = (Math.random() * 2 - 1) * intensity;
+                screen.context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, startX + xShift, startY + yShift);
             }
             else {
                 clearInterval(id)
-                ctx.setTransform(matrix)
+                screen.context.setTransform(matrix)
                 global._shakingScreen = false
             }
         }, 0);
