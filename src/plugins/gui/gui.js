@@ -138,7 +138,6 @@ window.addEventListener("afterUpdate", () => {
         global._cameras.forEach(element => {
             element.drawcropArea();
         });
-        global._hitboxes = []
     }
     if (left_container["fps"].toggle_box.checked) {
         screen.context.save();
