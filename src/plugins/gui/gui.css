@@ -11,6 +11,8 @@ body {
 }
 
 ._gui_debug_info {
+    user-select: none;
+    overflow-x: hidden;
     position: fixed;
     bottom: 0;
     width: 100svw;
@@ -51,4 +53,48 @@ body {
 ._gui_debug_container {
     height: 25svh;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    overflow: scroll;
+}
+
+._gui_left_container {
+    overflow-x: hidden;
+    width: calc(1/3 * 100%);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    overflow: scroll;
+    border-right: #444444 1px solid;
+}
+
+._gui_left_container_title {
+    color: #bbb;
+    width: calc(100% - 1.5rem);
+    height: 1.25rem;
+    background-color: #222222;
+    border-bottom: #444444 1px solid;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 0.75em;
+}
+
+._gui_left_container_content {
+    overflow-x: hidden;
+    width: calc(100% - 1.5rem);
+    height: calc(100% - 1.25rem);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0.75em;
+}
+
+._gui_left_container_content .toggle_button {
+    width: 75%;
 }

@@ -39,7 +39,6 @@ window.addEventListener("update", () => {
     //a.hitboxes.draw()
 
     ctx.fillStyle = "white"
-    drawtext(`FPS ${(1/time.fixedDeltaTime).toFixed(0)}`, [64, 0], 64, "bubbly", "top", "start", 0, 1.0)
     drawtext(`${global._disable_mouse_events}`, [64, 128], 64, "bubbly", "top", "start", 0, 1.0)
     btn.update()
     btn.draw()
@@ -75,7 +74,6 @@ window.addEventListener("update", () => {
         slde.hitboxes.draw()
         sldd.hitboxes.draw()
     }
-    drawPointers()
 })
 window.addEventListener("fixedUpdate", () => {
     a.vel.y += 1500 * time.fixedDeltaTime
