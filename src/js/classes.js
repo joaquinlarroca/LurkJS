@@ -928,17 +928,17 @@ export class sliderv {
     }
 }
 export class camera {
-    constructor(x, y, w, h) {
+    constructor([x, y, w, h], [vx, vy, vw, vh]) {
         global._cameras.push(this)
         this.x = x
         this.y = y
         this.width = w
         this.height = h
         this.viewport = {
-            x: 0,
-            y: 0,
-            width: screen.canvas.width,
-            height: screen.canvas.height
+            x: vx,
+            y: vy,
+            width: vw,
+            height: vh
         }
         this.snapshot = undefined
     }
@@ -949,10 +949,11 @@ export class camera {
         screen.context.drawImage(this.snapshot, this.viewport.x, this.viewport.y, this.viewport.width, this.viewport.height, this.x, this.y, this.width, this.height)
     }
     drawcropArea() {
-        //draw the area
-        screen.context.strokeStyle = "red"
-        screen.context.lineWidth = screen.canvas.width / screen.canvas.height * 2
-        screen.context.strokeRect(this.viewport.x, this.viewport.y, this.viewport.width, this.viewport.height)
+        screen.context.save();
+        screen.context.strokeStyle = "#0000FF";
+        screen.context.lineWidth = screen.canvas.width / screen.canvas.height * 2;
+        screen.context.strokeRect(this.viewport.x, this.viewport.y, this.viewport.width, this.viewport.height);
+        screen.context.restore();
     }
 }
 export class timeout {

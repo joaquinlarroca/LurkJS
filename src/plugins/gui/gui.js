@@ -81,6 +81,7 @@ gui.left_container.title.innerText = `Rendering options`
 document.head.appendChild(gui.css_link)
 
 gui.debug_tab.onclick = () => {
+    check_to_disable();
     if (gui.debug_container.style.display == "none") {
         gui.debug_container.style.display = "flex";
         gui.debug_tab_downarrow.style.transform = "rotate(0deg)"
@@ -109,7 +110,7 @@ let left_container = {
     "draw_cameras_crop_areas": new gui.toggle_button("cameras crop areas", false),
     "fps": new gui.toggle_button("frames per second", false),
 }
-setInterval(() => {
+function check_to_disable(){
     if (global._hitboxes.length <= 0) {
         left_container["render_hitboxes"].disable()
     }
@@ -122,7 +123,10 @@ setInterval(() => {
     else {
         left_container["draw_cameras_crop_areas"].enable()
     }
+}
 
+setInterval(() => {
+    check_to_disable();
 }, 2500)
 
 window.addEventListener("afterUpdate", () => {
@@ -140,11 +144,11 @@ window.addEventListener("afterUpdate", () => {
         });
     }
     if (left_container["fps"].toggle_box.checked) {
-        screen.context.save();
-        screen.context.fillStyle = "#ffffff";
         var size = canvas.width + canvas.height
         var text_size = size / 75
         var def_size = size / 256
+        screen.context.save();
+        screen.context.fillStyle = "#ffffff";
         drawtext(`FPS: ${global.fps}`, [canvas.width - def_size, canvas.height / 2], text_size, "monospace", "top", "end", 0, 1.0);
         screen.context.lineWidth = 1;
         screen.context.strokeStyle = "#000000";
@@ -155,6 +159,7 @@ window.addEventListener("afterUpdate", () => {
         screen.context.restore();
 
         screen.context.save();
+        screen.context.fillStyle = "#ffffff";
         drawtext(`Fixed FPS: ${(1 / time.fixedDeltaTime).toFixed(0)}`, [canvas.width - def_size, canvas.height / 2 + text_size], text_size, "monospace", "top", "end", 0, 1.0);
         screen.context.lineWidth = 1;
         screen.context.strokeStyle = "#000000";

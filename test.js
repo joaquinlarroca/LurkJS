@@ -27,7 +27,7 @@ sldd.fill.inverted = false
 
 let park = new object(image["park"], [0, 0], [1920, 1080])
 
-let cam = new camera(1344, 0, 576, 324)
+let cam = new camera([1344, 0, 576, 324], [0, 0, 576, 324])
 window.addEventListener("started", () => {
     //screen.doc.requestFullscreen();
 })

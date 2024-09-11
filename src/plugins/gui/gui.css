@@ -21,7 +21,6 @@ body {
     color: #FFFFFF;
     font-family: "Fira Code", sans-serif;
     font-size: 0.7em;
-    transition: all 0.2s ease;
 }
 
 ._gui_debug_tab {
@@ -57,25 +56,24 @@ body {
     flex-direction: column;
     justify-content: space-around;
     align-items: flex-start;
-    overflow: scroll;
+    overflow: hidden;
 }
 
 ._gui_left_container {
-    overflow-x: hidden;
+    overflow: hidden;
     width: calc(1/3 * 100%);
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    overflow: scroll;
     border-right: #444444 1px solid;
 }
 
 ._gui_left_container_title {
     color: #bbb;
     width: calc(100% - 1.5rem);
-    height: 1.25rem;
+    min-height: 1.25rem;
     background-color: #222222;
     border-bottom: #444444 1px solid;
     display: flex;
@@ -85,7 +83,9 @@ body {
 }
 
 ._gui_left_container_content {
+    overflow-y: auto;
     overflow-x: hidden;
+    scrollbar-width: none;
     width: calc(100% - 1.5rem);
     height: calc(100% - 1.25rem);
     display: flex;
@@ -96,5 +96,7 @@ body {
 }
 
 ._gui_left_container_content .toggle_button {
-    width: 75%;
+    width: 100%;
+    min-height: 1.25em;
+    margin-bottom: 0.5em;
 }

@@ -160,10 +160,12 @@ export function isPointer(hitbox) {
     }
 }
 export function drawPointers() {
+    screen.context.save();
     for (const [key, pointer] of Object.entries(pointers)) {
         screen.context.fillStyle = "red"
         screen.context.fillRect(pointer.x - 4, pointer.y - 4, 8, 8)
     };
+    screen.context.restore();
 }
 
 
