@@ -80,6 +80,8 @@ gui.left_container.title.innerText = `Rendering options`
 
 document.head.appendChild(gui.css_link)
 
+gui.debug_container.style.display = "none";
+gui.debug_tab_downarrow.style.transform = "rotate(180deg)"
 gui.debug_tab.onclick = () => {
     check_to_disable();
     if (gui.debug_container.style.display == "none") {
@@ -110,7 +112,7 @@ let left_container = {
     "draw_cameras_crop_areas": new gui.toggle_button("cameras crop areas", false),
     "fps": new gui.toggle_button("frames per second", false),
 }
-function check_to_disable(){
+function check_to_disable() {
     if (global._hitboxes.length <= 0) {
         left_container["render_hitboxes"].disable()
     }

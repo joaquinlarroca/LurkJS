@@ -77,7 +77,18 @@ window.addEventListener("update", () => {
 })
 window.addEventListener("fixedUpdate", () => {
     a.vel.y += 1500 * time.fixedDeltaTime
+    var x = mouse.x - a.x - a.halfwidth
+    var y = mouse.y - a.y - a.halfheight
 
+    if(x > 50){
+        a.vel.x += 5000 * time.fixedDeltaTime
+    }
+    if(x < -50){
+        a.vel.x -= 5000 * time.fixedDeltaTime
+    }
+    if(y < 0){
+        //a.vel.y -= 2000 * time.fixedDeltaTime
+    }
     if (keyPressed("a")) {
         a.vel.x -= 2000 * time.fixedDeltaTime
         a.dir = -1
