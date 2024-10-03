@@ -3,7 +3,8 @@ import { drawPointers, isClicking, isHovering, keyPressed, mouse, pointers } fro
 import { button, camera, hitbox, hitboxCircleFixed, hitboxFixed, object, slider, sliderv } from "./src/js/classes.js";
 import { loadFont, loadImage } from "./src/js/loader.js";
 import { setup, clear, drawtext, shakeScreen, lerp } from "./src/js/functions.js";
-import { gui } from "./src/plugins/gui/gui.js";
+import "./src/plugins/gui/gui.js";
+import "./src/plugins/particles/particles.js";
 
 await loadImage("./src/images/bunny.png", "bunny")
 await loadImage("./bg.png", "park")
@@ -68,17 +69,10 @@ window.addEventListener("update", () => {
         btn.text.text = "CLICK"
         btn.text.size = 64
     }
-    if (keyPressed(" ")) {
-        a.hitboxes.draw()
-        btn.hitboxes.draw()
-        slde.hitboxes.draw()
-        sldd.hitboxes.draw()
-    }
 })
 window.addEventListener("fixedUpdate", () => {
     a.vel.y += 1500 * time.fixedDeltaTime
     var x = mouse.x - a.x - a.halfwidth
-    var y = mouse.y - a.y - a.halfheight
 
     if(x > 50){
         a.vel.x += 5000 * time.fixedDeltaTime
@@ -86,16 +80,13 @@ window.addEventListener("fixedUpdate", () => {
     if(x < -50){
         a.vel.x -= 5000 * time.fixedDeltaTime
     }
-    if(y < 0){
-        //a.vel.y -= 2000 * time.fixedDeltaTime
-    }
     if (keyPressed("a")) {
-        a.vel.x -= 2000 * time.fixedDeltaTime
+        a.vel.x -= 6000 * time.fixedDeltaTime
         a.dir = -1
         a.scale = [1, -1]
     }
     if (keyPressed("d")) {
-        a.vel.x += 2000 * time.fixedDeltaTime
+        a.vel.x += 6000 * time.fixedDeltaTime
         a.dir = 1
         a.scale = [1, 1]
     }
