@@ -1,3 +1,8 @@
+export const engine = {
+    name: "LurkJS",
+    version: "0.0.1",
+}
+
 export let global = {
     _append_to: document.body,
     _disable_mouse_events: false,
@@ -20,12 +25,23 @@ export let global = {
     _sliders: [],
     _cameras: [],
     _sounds: [],
-    _plugins: [],
+    _plugins: [
+        {
+            name: engine.name,
+            version: engine.version,
+            author: "",
+            description: "The LurkJS plugin support",
+            path: "default",
+            config: {
+                open_on_start: true
+            }
+        },
+        {
+
+        }
+    ],
 }
-export const engine = {
-    name: "LurkJS",
-    version: "0.0.1",
-}
+
 export let image = {};
 export let sound = {};
 export let font = {};

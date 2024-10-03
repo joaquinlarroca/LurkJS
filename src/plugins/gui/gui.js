@@ -68,18 +68,21 @@ export const gui = {
         }
     },
     plugin_display: class {
-        constructor(info) {
+        constructor(i) {
             this.plugin = document.createElement("div");
             this.plugin.className = "_gui_plugin";
-            this.plugin_text = document.createElement("div");
+            this.plugin_text = document.createElement("a");
             this.plugin_text.className = "_gui_plugin_text";
-            this.plugin_text.innerText = info.name;
-            this.plugin_description = document.createElement("div");
+            this.plugin_text.innerText = i.name;
+            this.plugin_description = document.createElement("a");
             this.plugin_description.className = "_gui_plugin_description";
-            this.plugin_description.innerText = info.description;
+            this.plugin_description.innerText = i.description;
             this.plugin_image = document.createElement("img");
             this.plugin_image.className = "_gui_plugin_image";
-            this.plugin_image.src = `./src/plugins/${info.path}/icon.png`;
+            this.plugin_image.src = `./src/plugins/${i.path}/icon.png`;
+            this.plugin_image.onerror = () => {
+                this.plugin_image.src = `./src/plugins/${info.path}/no-icon.png`;
+            }
             this.plugin.appendChild(this.plugin_image);
             this.plugin.appendChild(this.plugin_text);
             this.plugin.appendChild(this.plugin_description);
@@ -97,7 +100,7 @@ gui.debug_tab_downarrow.className = "_gui_debug_tab_downarrow";
 gui.debug_tab_downarrow.src = `./src/plugins/${info.path}/chevron-down.svg`;
 gui.debug_container.className = "_gui_debug_container";
 
-gui.debug_tab.innerHTML = `<div> ${info.name} <a style='color:#bbb'>${info.version}</a>  <a style='color:#444'>${info.description}</a> </div>`;
+gui.debug_tab.innerHTML = `<div> ${info.name} <a style='color:#bbb'>${info.version}</a>  <a style='color:#444'></a> </div>`;
 
 
 gui.left_container.container.className = "_gui_left_container";
@@ -122,6 +125,10 @@ if (!info.config.open_on_start) {
 
 gui.debug_tab.onclick = () => {
     check_to_disable();
+    gui.middle_container.content.innerHTML = "";
+    global._plugins.forEach(plugin => {
+        gui.middle_container.content.appendChild(new gui.plugin_display(plugin).plugin);
+    });
     if (gui.debug_container.style.display == "none") {
         gui.debug_container.style.display = "flex";
         gui.debug_tab_downarrow.style.transform = "rotate(0deg)";
@@ -170,11 +177,6 @@ function check_to_disable() {
 
 setInterval(() => {
     check_to_disable();
-}, 2500)
-setTimeout(() => {
-    global._plugins.forEach(plugin => {
-        gui.middle_container.content.appendChild(new gui.plugin_display(plugin).plugin);
-    });
 }, 2500)
 
 window.addEventListener("afterUpdate", () => {
