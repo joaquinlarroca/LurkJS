@@ -5,7 +5,7 @@ let info = {
     author: "joaquinlarroca",
     description: "Classes for generating particles",
     path: "particles",
-    config:{}
+    config: {}
 }
 global._plugins.newPlugin(info);
 
@@ -72,10 +72,12 @@ export class ParticleGenerator {
         this.particles = this.particles.filter(particle => particle.y > 0);
         this.particles = this.particles.filter(particle => particle.y < screen.canvas.height);
         this.particles = this.particles.filter(particle => particle.alpha > 0);
+    }
+    create() {
         for (let i = 0; i < this.particleCount; i++) {
-            let size = Math.random() * this.sizeRange + 2;
-            let speedX = (Math.random()) * this.speed.x;
-            let speedY = (Math.random()) * this.speed.y;
+            let size = Math.random() * this.sizeRange;
+            let speedX = (Math.random() * 0.25) * this.speed.x;
+            let speedY = (Math.random()* 0.25) * this.speed.y;
             let lifespan = Math.random() * this.lifespanRange;
             this.particles.push(new Particle(this.x, this.y, size, this.color, speedX, speedY, lifespan, this.alphaReducer));
         }

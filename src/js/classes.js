@@ -91,7 +91,7 @@ export class hitboxFixed {
     draw() {
         this.updateDimensions()
         screen.context.save()
-        screen.context.strokeStyle = "red"
+        screen.context.strokeStyle = this.color
         screen.context.lineWidth = 2
         screen.context.strokeRect(this.left, this.top, this.width, this.height)
         screen.context.restore()
@@ -103,7 +103,7 @@ export class hitboxCircle {
         this.type = "hitbox-circle"
         this.object = object ?? null
         this.sizeMultiplier = sizeMultiplier ?? 1
-        this.radius = this.object.halfwidth
+        this.radius = Math.min(this.object.halfwidth, this.object.halfheight)
         this.x = this.object.x + this.object.halfwidth
         this.y = this.object.y + this.object.halfheight
     }
@@ -234,6 +234,11 @@ export class object {
         this.alpha = 1
 
         this.borderRadius = 0
+        this.stroke = {
+            active: false,
+            color: "#FFFFFF",
+            width: 5
+        }
     }
     collidesWith(object) {
         for (const hitboxes of this.hitboxes) {
@@ -265,6 +270,11 @@ export class object {
         screen.context.fillStyle = "rgba(0,0,0,0)"
         screen.context.beginPath();
         screen.context.roundRect(-this.width * this.offset[0], -this.height * this.offset[1], this.width, this.height, this.borderRadius);
+        if (this.stroke.active) {
+            screen.context.strokeStyle = this.stroke.color;
+            screen.context.lineWidth = this.stroke.width;
+            screen.context.stroke();
+        }
         screen.context.closePath()
         screen.context.clip()
         if (this.usingColor) {

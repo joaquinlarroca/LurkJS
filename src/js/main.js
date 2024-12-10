@@ -37,7 +37,6 @@ export let global = {
     ],
 }
 global._plugins.newPlugin = (plugin) => {
-    console.log(plugin);
     dispatchEvent(new CustomEvent('newPlugin'));
     global._plugins.push(plugin);
 }

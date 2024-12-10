@@ -8,7 +8,7 @@ let info = {
     description: "An interface for debugging in LurkJS",
     path: "gui",
     config: {
-        open_on_start: true
+        open_on_start: false
     }
 }
 global._plugins.newPlugin(info);
@@ -124,6 +124,10 @@ if (!info.config.open_on_start) {
 }
 
 gui.debug_tab.onclick = () => {
+    gui.middle_container.content.innerHTML = "";
+    global._plugins.forEach(plugin => {
+        gui.middle_container.content.appendChild(new gui.plugin_display(plugin).plugin);
+    });
     check_to_disable();
     if (gui.debug_container.style.display == "none") {
         gui.debug_container.style.display = "flex";
@@ -216,15 +220,6 @@ window.addEventListener("afterUpdate", () => {
         screen.context.restore();
 
     }
-})
-window.addEventListener("newPlugin", () => {
-    gui.middle_container.content.innerHTML = "";
-    setTimeout(() => {
-        global._plugins.forEach(plugin => {
-            gui.middle_container.content.appendChild(new gui.plugin_display(plugin).plugin);
-        });
-    }, 0)
-
 })
 for (var val in left_container) {
     if (left_container.hasOwnProperty(val)) {
