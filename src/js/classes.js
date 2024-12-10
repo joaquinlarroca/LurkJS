@@ -197,13 +197,19 @@ export class object {
                 this.texture = image["noTexture"]
             }
         }
+        else if (texture instanceof HTMLImageElement) {
+            this.usingColor = false
+            this.texture = texture
+        }
         else {
             this.usingColor = false
-            this.texture = texture ?? null
+            this.texture = image["noTexture"]
         }
         this.x = x ?? 0
         this.y = y ?? 0
         this.offset = [0.5, 0.5]
+
+        this.toDelete = false
 
         this.width = width ?? 32
         this.height = height ?? 32
@@ -285,10 +291,25 @@ export class object {
                 this.texture = image["noTexture"]
             }
         }
+        else if (texture instanceof HTMLImageElement) {
+            this.usingColor = false
+            this.texture = texture
+        }
         else {
             this.usingColor = false
-            this.texture = texture ?? null
+            this.texture = image["noTexture"]
         }
+    }
+    angletopoint(point) {
+        this.update()
+        this.angle = Math.atan2(point[1] - (this.y + this.halfheight), point[0] - (this.x + this.halfwidth)) * (180 / Math.PI)
+    }
+    move(steps) {
+        const angleRad = (this.angle * Math.PI) / 180
+        const deltaX = Math.cos(angleRad) * steps
+        const deltaY = Math.sin(angleRad) * steps
+        this.x += deltaX;
+        this.y += deltaY;
     }
 }
 export class button extends object {
@@ -569,7 +590,7 @@ export class slider {
             height: this.height
 
         }
-        if(this.fill.inverted){
+        if (this.fill.inverted) {
             var inverted_percentage = this.maxpercentage - this.minpercentage - percentage_slider
             fill.x = -this.width * this.offset[0] + this.width
             fill.width = -inverted_percentage * this.width + inverted_percentage * this.thumb.width - this.thumb.width / 2
@@ -849,7 +870,7 @@ export class sliderv {
             height: percentage_slider * this.height - percentage_slider * this.thumb.height + this.thumb.height / 2
 
         }
-        if(this.fill.inverted){
+        if (this.fill.inverted) {
             var inverted_percentage = this.maxpercentage - this.minpercentage - percentage_slider
             fill.y = -this.height * this.offset[0] + this.height
             fill.height = -inverted_percentage * this.height + inverted_percentage * this.thumb.height - this.thumb.height / 2

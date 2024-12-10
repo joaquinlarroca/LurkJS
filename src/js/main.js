@@ -2,7 +2,7 @@ export const engine = {
     name: "LurkJS",
     version: "0.0.1",
 }
-
+document.title = ` ${engine.name} ${engine.version}`
 export let global = {
     _append_to: document.body,
     _disable_mouse_events: false,
@@ -32,16 +32,15 @@ export let global = {
             author: "",
             description: "The LurkJS plugin support",
             path: "default",
-            config: {
-                open_on_start: true
-            }
-        },
-        {
-
+            config: {}
         }
     ],
 }
-
+global._plugins.newPlugin = (plugin) => {
+    console.log(plugin);
+    dispatchEvent(new CustomEvent('newPlugin'));
+    global._plugins.push(plugin);
+}
 export let image = {};
 export let sound = {};
 export let font = {};

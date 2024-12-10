@@ -7,7 +7,7 @@ let info = {
     path: "particles",
     config:{}
 }
-global._plugins.push(info);
+global._plugins.newPlugin(info);
 
 export class Particle {
     constructor(x, y, size, color, speedX, speedY, lifespan, alphaReducer) {

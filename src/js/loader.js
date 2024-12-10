@@ -6,7 +6,6 @@ screen.loading.logo_bg = loadingBackgroundColor
 
 let load = setInterval(() => {
     var percent = global._assetsToLoadDone / global._assetsToLoadCount * 100
-    document.title = ` ${engine.name} ${engine.version} (${percent.toFixed(0)}%)`
     screen.loading.bar.style.background = `linear-gradient(90deg, ${loadingBarColor} ${percent}%, ${loadingBackgroundColor} ${percent}%)`
     if (global._assetsToLoadCount == global._assetsToLoadDone && true) {
         global._assets_have_loaded = true
@@ -77,8 +76,8 @@ export async function loadSound(url, name) {
     audioElement.src = url;
     try {
         await new Promise((resolve, reject) => {
-            audioElement.onload = () => {
-                global._assetsToLoadDone += 1;
+            audioElement.oncanplay = () => {
+                global._assetsToLoadDone += 1;                
                 resolve();
             };
             audioElement.onerror = () => {

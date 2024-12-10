@@ -11,7 +11,7 @@ let info = {
         open_on_start: true
     }
 }
-global._plugins.push(info);
+global._plugins.newPlugin(info);
 
 export const gui = {
     css_file: `./src/plugins/${info.path}/gui.css`,
@@ -125,10 +125,6 @@ if (!info.config.open_on_start) {
 
 gui.debug_tab.onclick = () => {
     check_to_disable();
-    gui.middle_container.content.innerHTML = "";
-    global._plugins.forEach(plugin => {
-        gui.middle_container.content.appendChild(new gui.plugin_display(plugin).plugin);
-    });
     if (gui.debug_container.style.display == "none") {
         gui.debug_container.style.display = "flex";
         gui.debug_tab_downarrow.style.transform = "rotate(0deg)";
@@ -220,6 +216,15 @@ window.addEventListener("afterUpdate", () => {
         screen.context.restore();
 
     }
+})
+window.addEventListener("newPlugin", () => {
+    gui.middle_container.content.innerHTML = "";
+    setTimeout(() => {
+        global._plugins.forEach(plugin => {
+            gui.middle_container.content.appendChild(new gui.plugin_display(plugin).plugin);
+        });
+    }, 0)
+
 })
 for (var val in left_container) {
     if (left_container.hasOwnProperty(val)) {
