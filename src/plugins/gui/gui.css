@@ -1,5 +1,5 @@
 @font-face {
-    font-family: 'Fira Code';
+    font-family: "Fira Code";
     src: url("./FiraCode-Regular.ttf");
 }
 
@@ -18,7 +18,7 @@ body {
     width: 100svw;
     height: auto;
     background-color: rgba(34, 34, 34, 0.95);
-    color: #FFFFFF;
+    color: #ffffff;
     font-family: "Fira Code", sans-serif;
     font-size: 0.7em;
 }
@@ -34,14 +34,6 @@ body {
     align-items: center;
     padding-left: 0.75em;
     padding: 0 0.75em;
-}
-
-._gui_debug_tab_button {
-    width: 10%;
-    height: 100%;
-    display: flex;
-    justify-content: right;
-    transition: all 0.2s ease;
 }
 
 ._gui_debug_tab_downarrow {
@@ -61,7 +53,7 @@ body {
 
 ._gui_left_container {
     overflow: hidden;
-    width: calc(1/3 * 100%);
+    width: calc(1 / 3 * 100%);
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -103,7 +95,7 @@ body {
 
 ._gui_middle_container {
     overflow: hidden;
-    width: calc(1/3 * 100%);
+    width: calc(1 / 3 * 100%);
     height: 100%;
     display: flex;
     flex-direction: column;

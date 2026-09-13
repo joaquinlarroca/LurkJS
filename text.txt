@@ -1,3 +1,0 @@
-    const textMetrics = screen.context.measureText(text);
-    const textWidth = textMetrics.width;
-    const textHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent;

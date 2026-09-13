@@ -1,0 +1,31 @@
+{
+    "name": "lurkjs",
+    "version": "0.1.0",
+    "description": "LurkJS — a tiny zero-dependency 2D canvas game engine",
+    "type": "module",
+    "license": "MIT",
+    "author": "joaquinlarroca",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/joaquinlarroca/LurkJS.git"
+    },
+    "keywords": [
+        "canvas",
+        "game-engine",
+        "2d",
+        "typescript",
+        "engine"
+    ],
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc --noEmit && vite build",
+        "typecheck": "tsc --noEmit",
+        "format": "prettier --write .",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "prettier": "^3.9.6",
+        "typescript": "^7.0.2",
+        "vite": "^8.3.0"
+    }
+}
