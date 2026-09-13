@@ -15,12 +15,12 @@ body {
 }
 canvas {
     background-color: var(--canvas-bg);
+    touch-action: none;
 }
 
 :root {
     --background: #171717;
-    --app-color-ligth: #eeeeee;
-    --main: #A9F249;
+    --main: #a9f249;
 
     --body-bg: var(--background);
     --canvas-bg: #000000;
@@ -28,6 +28,4 @@ canvas {
     --loading-bar-color: #000000;
     --loading-screen-background: var(--background);
     --loading-bar-done-color: var(--main);
-
-
 }
