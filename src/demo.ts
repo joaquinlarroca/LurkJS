@@ -1,5 +1,5 @@
 import { ctx, time } from "./js/main.ts"
-import { keyPressed as isKeyDown, mouse } from "./js/listeners.ts"
+import { keyPressed as isKeyDown, mouse, pointers } from "./js/listeners.ts"
 import { on } from "./js/events.ts"
 import {
     button,
@@ -22,20 +22,22 @@ import {
     shakeScreen,
 } from "./js/functions.ts"
 import { loadFont, loadImage } from "./js/loader.ts"
-import { ParticleGenerator } from "./plugins/particles/particles.ts"
+import { Particle, ParticleGenerator } from "./plugins/particles/particles.ts"
 import { confetti } from "./plugins/confetti/confetti.ts"
 import { screenshot } from "./plugins/screenshot/screenshot.ts"
 import { boomTone, coinTone, shootTone } from "./plugins/synth/synth.ts"
 import "./plugins/gui/gui.ts"
 import bunnyUrl from "./images/bunny.png"
-import bgUrl from "../bg.png"
-import bubblyUrl from "../bubbly.ttf"
+import coinUrl from "./images/coin.png"
+import bgUrl from "./images/bg.png"
+import bubblyUrl from "./images/bubbly.ttf"
 
 const W = 1920
 const H = 1080
 const startTime = Date.now()
 
 const bunny = await loadImage(bunnyUrl, "bunny")
+const coinImage = await loadImage(coinUrl, "coin")
 const parkImage = await loadImage(bgUrl, "park")
 await loadFont(bubblyUrl, "bubbly")
 
@@ -59,57 +61,59 @@ const coins: entity[] = []
 const randX = () => 90 + Math.random() * 1130
 const randY = () => 90 + Math.random() * 620
 for (let i = 0; i < 8; i++) {
-    const coin = new object("color: #ffd34d", [randX(), randY()], [54, 54])
-    coin.borderRadius = 27
+    const coin = new object(coinImage, [randX(), randY()], [54, 54])
     coin.hitboxes.push(new hitboxCircle(coin, 0.85))
     coins.push(coin)
 }
 
-const panel = new object("color: rgba(10, 10, 16, 0.55)", [1310, 60], [400, 720])
+const panel = new object("color: rgba(10, 10, 16, 0.55)", [1500, 60], [400, 720])
 panel.borderRadius = 24
 
 const speedSlider = new slider(
     "color:#1c1c22",
+    "color:#ffffff",
     "color:#a9f249",
-    "color:#a9f249",
-    [1340, 560],
+    [1530, 520],
     [300, 30],
     30,
     [300, 2000],
     900,
+    100,
 )
 speedSlider.borderRadius = 15
 speedSlider.thumb.borderRadius = 15
 
 const trailSlider = new slider(
     "color:#1c1c22",
+    "color:#ffffff",
     "color:#a9f249",
-    "color:#a9f249",
-    [1340, 620],
+    [1530, 620],
     [300, 30],
     30,
     [0, 24],
     10,
+    1,
 )
 trailSlider.borderRadius = 15
 trailSlider.thumb.borderRadius = 15
 
 const gravitySlider = new sliderv(
     "color:#1c1c22",
-    "color:#a9f249",
-    "color:#a9f249",
-    [1680, 140],
+    bunny,
+    "color:#cf3a3a",
+    [1870, 140],
     [30, 400],
     30,
-    [0, 1600],
+    [-1600, 1600],
     900,
+    100,
 )
 gravitySlider.borderRadius = 15
-gravitySlider.thumb.borderRadius = 15
+gravitySlider.thumb.borderRadius = 0
 
 const boom = new button(
     "color: #cf3a3a",
-    [1340, 670],
+    [1530, 670],
     [300, 80],
     ["BOOM", "white", 48, "bubbly"],
     500,
@@ -118,9 +122,9 @@ boom.borderRadius = 20
 
 const boomCooldown = new timeout(700)
 
-const cam = new camera([1320, 800, 360, 250], [W / 2 - 150, H / 2 - 110, 300, 220])
+const cam = new camera([1510, 800, 360, 250], [W / 2 - 150, H / 2 - 110, 300, 220])
 
-const trail = new ParticleGenerator(player.x, player.y, 10, 9, "#a9f249", -60, -10, 500, 1.2)
+const trail = new ParticleGenerator(player.x, player.y, 10, 40, "#a9f249", -60, -10, 500, 3)
 const burst = new ParticleGenerator(0, 0, 60, 16, "#ff5b4d", -420, 520, 800, 1.1)
 const coinBurst = new ParticleGenerator(0, 0, 26, 9, "#ffd34d", -260, 260, 450, 1.2)
 const spark = new ParticleGenerator(0, 0, 30, 9, "#ff9f1a", -320, 380, 550, 1.2)
@@ -169,7 +173,7 @@ on("update", () => {
             coinBurst.y = coin.y + coin.halfheight
             coinBurst.create()
             confetti.burst(coinBurst.x, coinBurst.y, 22, 180)
-            coinTone(score)
+            coinTone(Math.random() * 12)
             coin.x = randX()
             coin.y = randY()
         }
@@ -179,6 +183,18 @@ on("update", () => {
         coin.angle += 120 * time.deltaTime
         coin.draw()
     }
+
+    ctx.fillStyle = "#ffffff"
+    drawText(`${score} coins`, [64, 84], 64, "bubbly")
+    drawText(getTimeElapsed(startTime), [64, 156], 40, "bubbly", "top", "start", 0, 0.9)
+
+    const speed = distance(0, 0, player.vel.x, player.vel.y)
+    trail.x = player.anchor.x
+    trail.y = player.anchor.y
+    trail.particleCount = Math.round((speed / 400) * trailSlider.percentage)
+    trail.create()
+    trail.update()
+    trail.draw()
 
     player.draw()
 
@@ -195,18 +211,23 @@ on("update", () => {
         }
     }
 
-    const speed = distance(0, 0, player.vel.x, player.vel.y)
-    trail.x = player.anchor.x
-    trail.y = player.anchor.y
-    trail.particleCount = Math.round((speed / 400) * trailSlider.percentage)
-    trail.create()
-    trail.update()
-    trail.draw()
-
     if (mouse.down && !wasDown) {
-        spark.x = mouse.x
-        spark.y = mouse.y
-        spark.create()
+        for (let i = 0; i < 40; i++) {
+            const angle = Math.random() * Math.PI * 2
+            const power = 150 + Math.random() * 450
+            spark.particles.push(
+                new Particle(
+                    mouse.x,
+                    mouse.y,
+                    3 + Math.random() * 9,
+                    "#ff9f1a",
+                    Math.cos(angle) * power,
+                    Math.sin(angle) * power,
+                    Math.random() * 550,
+                    1.2,
+                ),
+            )
+        }
         shootTone()
     }
     wasDown = mouse.down
@@ -230,12 +251,12 @@ on("update", () => {
     const vw = 300
     const vh = 220
     cam.viewport.x = clamp(
-        lerp(cam.viewport.x, player.x + player.halfwidth - vw / 2, 0.1),
+        lerp(cam.viewport.x, player.x + player.halfwidth - vw / 2, 0.2),
         0,
         W - vw,
     )
     cam.viewport.y = clamp(
-        lerp(cam.viewport.y, player.y + player.halfheight - vh / 2, 0.1),
+        lerp(cam.viewport.y, player.y + player.halfheight - vh / 2, 0.2),
         0,
         H - vh,
     )
@@ -247,21 +268,30 @@ on("update", () => {
 
     panel.draw()
 
+    speedSlider.update()
+    speedSlider.draw()
+    trailSlider.update()
+    trailSlider.draw()
+    gravitySlider.update()
+    gravitySlider.draw()
+
     ctx.fillStyle = "#ffffff"
-    drawText("ENGINE PLAYGROUND", [1510, 96], 40, "bubbly", "top", "center")
+    drawText("LURKJS PLAYGROUND", [1700, 96], 40, "bubbly", "top", "center")
     ctx.fillStyle = "#d6ff9e"
-    drawText("gravity", [1340, 150], 26, "bubbly")
-    drawText(`${Math.round(gravitySlider.percentage)}`, [1630, 150], 26, "bubbly", "top", "end")
+    drawText("gravity", [1530, 150], 26, "bubbly")
+    drawText(`${Math.round(gravitySlider.percentage)}`, [1820, 150], 26, "bubbly", "top", "end")
     ctx.fillStyle = "#c9c9c9"
-    drawText("catch the coins", [1340, 214], 26, "bubbly")
-    drawText("click — fireworks", [1340, 258], 26, "bubbly")
-    drawText("BOOM — shockwave", [1340, 302], 26, "bubbly")
-    drawText("P — screenshot, F — confetti", [1340, 346], 26, "bubbly")
+    drawText("WASD or touch — move", [1530, 214], 26, "bubbly")
+    drawText("catch the coins", [1530, 258], 26, "bubbly")
+    drawText("click — fireworks", [1530, 302], 26, "bubbly")
+    drawText("BOOM — shockwave", [1530, 346], 26, "bubbly")
+    drawText("P — screenshot", [1530, 390], 26, "bubbly")
+    drawText("F — confetti", [1530, 434], 26, "bubbly")
     ctx.fillStyle = "#d6ff9e"
-    drawText("speed", [1340, 528], 24, "bubbly")
-    drawText(`${Math.round(speedSlider.percentage)}`, [1630, 528], 24, "bubbly", "top", "end")
-    drawText("trail", [1340, 588], 24, "bubbly")
-    drawText(`${Math.round(trailSlider.percentage)}`, [1630, 588], 24, "bubbly", "top", "end")
+    drawText("speed", [1530, 488], 24, "bubbly")
+    drawText(`${Math.round(speedSlider.percentage)}`, [1820, 488], 24, "bubbly", "top", "end")
+    drawText("trail", [1530, 588], 24, "bubbly")
+    drawText(`${Math.round(trailSlider.percentage)}`, [1820, 588], 24, "bubbly", "top", "end")
 
     boom.update()
     boom.draw()
@@ -269,6 +299,8 @@ on("update", () => {
         boomCooldown.start()
         boom.text.text = "KABOOM!"
         explode(player.anchor.x, player.anchor.y)
+        player.vel.y = -speedSlider.percentage
+        player.vel.x = player.x < panel.x / 2 ? speedSlider.percentage : -speedSlider.percentage
     } else if (boomCooldown.active) {
         boom.text.text = "recharging..."
     } else {
@@ -276,16 +308,13 @@ on("update", () => {
     }
 
     ctx.fillStyle = "#ffffff"
-    drawText(`${score} coins`, [64, 84], 64, "bubbly")
-    drawText(getTimeElapsed(startTime), [64, 156], 40, "bubbly", "top", "start", 0, 0.9)
-    ctx.fillStyle = "#ffffff"
     drawText(
-        "drag the dials · P: screenshot · F: confetti rain · GUI tab: debug toggles",
-        [64, H - 72],
+        "drag the dials · P: screenshot · F: confetti rain · GUI panel: debug toggles",
+        [960, H - 72],
         26,
         "sans-serif",
         "top",
-        "start",
+        "center",
         0,
         0.75,
     )
@@ -295,12 +324,22 @@ on("fixedUpdate", () => {
     const maxSpeed = speedSlider.percentage
 
     player.vel.y += gravitySlider.percentage * time.fixedDeltaTime
-    const targetX = mouse.x - player.x - player.halfwidth
-    if (targetX > 40) {
-        player.vel.x += 5200 * time.fixedDeltaTime
-    }
-    if (targetX < -40) {
-        player.vel.x -= 5200 * time.fixedDeltaTime
+    const touchPointer = Object.values(pointers).find((pointer) => pointer.type === "touch")
+    if (touchPointer) {
+        const targetX = touchPointer.x - player.x - player.halfwidth
+        const targetY = touchPointer.y - player.y - player.halfheight
+        if (targetX > 40) {
+            player.vel.x += 5200 * time.fixedDeltaTime
+        }
+        if (targetX < -40) {
+            player.vel.x -= 5200 * time.fixedDeltaTime
+        }
+        if (targetY > 40) {
+            player.vel.y += 5200 * time.fixedDeltaTime
+        }
+        if (targetY < -40) {
+            player.vel.y -= 5200 * time.fixedDeltaTime
+        }
     }
 
     if (isKeyDown("a")) {
@@ -333,9 +372,13 @@ on("fixedUpdate", () => {
         player.x = 0
         player.vel.x *= -0.4
     }
-    if (player.x > W - player.width) {
-        player.x = W - player.width
+    if (player.x > panel.x - player.width) {
+        player.x = panel.x - player.width
         player.vel.x *= -0.4
+    }
+    if (player.y < 0) {
+        player.y = 0
+        player.vel.y *= -0.4
     }
     if (player.y > H - player.height) {
         player.y = H - player.height

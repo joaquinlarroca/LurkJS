@@ -77,6 +77,8 @@ class _slider {
     hover = false
     click = false
     toDelete = false
+    /** If set, `percentage` snaps to multiples of `step` from `minpercentage`. */
+    step: number | undefined = undefined
 
     constructor(
         background_texture: TextureArg,
@@ -88,12 +90,14 @@ class _slider {
         [minpercentage, maxpercentage]: [number, number],
         currentpercentage: number,
         orientation: Orientation,
+        step?: number,
     ) {
         engineState.sliders.push(this)
         this.orientation = orientation
         this.maxpercentage = maxpercentage
         this.minpercentage = minpercentage
-        this.percentage = clamp(currentpercentage, minpercentage, maxpercentage)
+        this.step = step
+        this.percentage = this.snap(clamp(currentpercentage, minpercentage, maxpercentage))
 
         this.x = x
         this.y = y
@@ -163,6 +167,18 @@ class _slider {
         return this.orientation === "vertical"
     }
 
+    /** Rounds `value` onto the step grid (anchored at `minpercentage`). */
+    private snap(value: number): number {
+        if (!this.step || this.step <= 0) {
+            return value
+        }
+        return clamp(
+            Math.round((value - this.minpercentage) / this.step) * this.step + this.minpercentage,
+            this.minpercentage,
+            this.maxpercentage,
+        )
+    }
+
     update(): void {
         if (isHovering(this.hitboxes[0]!) && !this.thumb.blocked) {
             this.hover = true
@@ -216,7 +232,9 @@ class _slider {
             }
         }
         this.percentage =
-            Math.round(clamp(this.percentage, this.minpercentage, this.maxpercentage) * 100) / 100
+            Math.round(
+                this.snap(clamp(this.percentage, this.minpercentage, this.maxpercentage)) * 100,
+            ) / 100
         const ratio =
             (this.percentage - this.minpercentage) / (this.maxpercentage - this.minpercentage)
         if (this.isVertical) {
@@ -359,6 +377,7 @@ export class slider extends _slider {
         thumb_width: number,
         range: [number, number],
         currentpercentage: number,
+        step?: number,
     ) {
         super(
             background_texture,
@@ -370,6 +389,7 @@ export class slider extends _slider {
             range,
             currentpercentage,
             "horizontal",
+            step,
         )
     }
 }
@@ -385,6 +405,7 @@ export class sliderv extends _slider {
         thumb_height: number,
         range: [number, number],
         currentpercentage: number,
+        step?: number,
     ) {
         super(
             background_texture,
@@ -396,6 +417,7 @@ export class sliderv extends _slider {
             range,
             currentpercentage,
             "vertical",
+            step,
         )
     }
 }

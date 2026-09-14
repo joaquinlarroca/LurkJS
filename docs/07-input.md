@@ -109,7 +109,7 @@ pointer-down over the shape (not drag).
 
 > This is why a slider's `update()` calls `isClicking(thumbHitbox, true)` — it
 > wants to observe the raw press without stealing it from other UI.
-> (`src/js/classes/slider.ts:169`)
+> (`src/js/classes/slider.ts:185`)
 
 ### `isPointer(hitbox)`
 

@@ -102,7 +102,7 @@ runtime, not at module-evaluation time.
   public API name) because `object` cannot be a class declaration identifier in
   TypeScript (`src/js/classes/entity.ts:159-161`).
 - Sliders share one internal `_slider` class; `slider` (horizontal) and `sliderv`
-  (vertical) are thin subclasses that pass the orientation (`src/js/classes/slider.ts:56-401`).
+  (vertical) are thin subclasses that pass the orientation (`src/js/classes/slider.ts:56-423`).
 
 ## Plugin architecture
 

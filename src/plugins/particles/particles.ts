@@ -48,7 +48,7 @@ export class Particle {
     update(): void {
         this.x += this.speed.x * time.deltaTime
         this.y += this.speed.y * time.deltaTime
-        this.alpha -= this.alphaReducer ** time.deltaTime
+        this.alpha -= this.alphaReducer * time.deltaTime
         this.alpha = Math.max(0, Math.min(1, this.alpha))
         if (!this.hasSetLifeSpan) {
             this.hasSetLifeSpan = true
