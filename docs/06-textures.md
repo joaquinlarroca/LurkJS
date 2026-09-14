@@ -45,7 +45,7 @@ This is what you see as the pink placeholder if a requested texture ends up null
 | Consumer                       | Texture slots                                                                                  |
 | ------------------------------ | ---------------------------------------------------------------------------------------------- |
 | `entity` / `object` / `button` | one drawable texture (`src/js/classes/entity.ts:8-10`)                                         |
-| `slider` / `sliderv`           | three separate parts: **background**, **thumb**, **fill** (`src/js/classes/slider.ts:129-134`) |
+| `slider` / `sliderv`           | three separate parts: **background**, **thumb**, **fill** (`src/js/classes/slider.ts:133-138`) |
 
 `slider` parts implement the `SliderPart` interface (`usingColor`, `color`,
 `texture`); the fill also carries an `inverted` flag (see [ui](12-ui.md)).
@@ -55,7 +55,7 @@ This is what you see as the pink placeholder if a requested texture ends up null
 - `entity.setTexture(texture)` re-applies `applyTexture` with the `noTexture`
   fallback (`src/js/classes/entity.ts:129-131`). Objects and buttons share this.
 - `_slider.setTexture(background, thumb, fill)` re-applies all three parts
-  (`src/js/classes/slider.ts:329-337`).
+  (`src/js/classes/slider.ts:347-355`).
 - `_slider` parts can also be mutated directly (`speedSlider.thumb.borderRadius = 15`,
   `gravitySlider.borderRadius = 15` — as the demo does).
 

@@ -17,10 +17,12 @@ npm run dev      # launches the Vite dev server with the interactive demo
 
 Open the URL Vite prints (usually `http://localhost:5173`). You should see the
 demo scene: a bunny you steer with the mouse or WASD, spinning coins to collect,
-live physics and particle sliders, a BOOM button that shakes the screen and sprays
-particles and debris, and a picture-in-picture "camera" inset that tracks the
-player. A debug GUI (fixed to the bottom of the screen) can toggle
-hitbox/pointer/camera rendering and a FPS readout.
+live physics and particle sliders, a BOOM button that launches the player and
+sprays particles and debris, and a picture-in-picture "camera" inset that tracks the
+player. A debug GUI (fixed to the bottom of the canvas) can toggle overlays like
+hitboxes, pointers, camera crops, fps, anchors, boundaries, angles, a grid, screen
+center, pointer coords and velocity vectors — most persisted to localStorage
+across reloads.
 
 > **Documentation:** the in-depth API + behavior docs live in
 > [docs/](docs/README.md) (start with `01-getting-started.md`, use

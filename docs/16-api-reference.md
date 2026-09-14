@@ -121,16 +121,16 @@ the plugin classes (reached by importing the plugin modules directly).
 
 ### sliders
 
-| Symbol                                                              | Signature                                                                                                                                                                                                                                   |
-| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `slider`                                                            | `(bgTexture, thumbTexture, fillTexture, [x,y], [w,h], thumbWidth, [min, max], currentValue)`                                                                                                                                                |
-| `sliderv`                                                           | same, `thumbHeight` for the vertical axis                                                                                                                                                                                                   |
-| — `.update()` `.draw()` `.setTexture(bg, thumb, fill)` `.destroy()` |                                                                                                                                                                                                                                             |
-| — fields                                                            | `orientation`, `percentage`, `minpercentage`, `maxpercentage`, `thumb: SliderThumb`, `background: SliderPart`, `fill: SliderPart & {inverted}`, `hover`, `click`, `blocked` (via `thumb.blocked`), `drag`, `angle`, `alpha`, `borderRadius` |
-| `SliderPart`                                                        | `{ usingColor, color, texture }`                                                                                                                                                                                                            |
-| `SliderThumb`                                                       | `SliderPart & { x,y,width,height,blocked,borderRadius }`                                                                                                                                                                                    |
-| `DragState`                                                         | `{ hasSet, pointer?, offset }`                                                                                                                                                                                                              |
-| `drawPart`                                                          | `(screen: {context}, part: SliderPart, x, y, w, h) => void`                                                                                                                                                                                 |
+| Symbol                                                              | Signature                                                                                                                                                                                                                                           |
+| ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `slider`                                                            | `(bgTexture, thumbTexture, fillTexture, [x,y], [w,h], thumbWidth, [min, max], currentValue, step?)`                                                                                                                                                 |
+| `sliderv`                                                           | same, `thumbHeight` for the vertical axis                                                                                                                                                                                                           |
+| — `.update()` `.draw()` `.setTexture(bg, thumb, fill)` `.destroy()` |                                                                                                                                                                                                                                                     |
+| — fields                                                            | `orientation`, `percentage`, `minpercentage`, `maxpercentage`, `step`, `thumb: SliderThumb`, `background: SliderPart`, `fill: SliderPart & {inverted}`, `hover`, `click`, `blocked` (via `thumb.blocked`), `drag`, `angle`, `alpha`, `borderRadius` |
+| `SliderPart`                                                        | `{ usingColor, color, texture }`                                                                                                                                                                                                                    |
+| `SliderThumb`                                                       | `SliderPart & { x,y,width,height,blocked,borderRadius }`                                                                                                                                                                                            |
+| `DragState`                                                         | `{ hasSet, pointer?, offset }`                                                                                                                                                                                                                      |
+| `drawPart`                                                          | `(screen: {context}, part: SliderPart, x, y, w, h) => void`                                                                                                                                                                                         |
 
 ### camera
 
@@ -170,9 +170,9 @@ the plugin classes (reached by importing the plugin modules directly).
 
 ### `src/plugins/gui/gui.ts`
 
-| Symbol | Notes                                                                                                        |
-| ------ | ------------------------------------------------------------------------------------------------------------ |
-| `gui`  | `{ info, debugInfo, debugTab, debugContainer, leftContainer, middleContainer, toggleButton, pluginDisplay }` |
+| Symbol | Notes                                                                                                                                                                |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gui`  | `{ info, debugInfo, debugTab, debugResizeHandle, debugContainer, leftContainer, middleContainer, thirdContainer, stats, toggleButton, numberConfig, pluginDisplay }` |
 
 ### `src/plugins/particles/particles.ts`
 

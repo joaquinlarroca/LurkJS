@@ -58,10 +58,15 @@ debugInfo (_gui_debug_info)
 └── debugContainer (_gui_debug_container)  — collapsible
     ├── leftContainer (_gui_left_container) "Rendering options"
     │   ├── title
-    │   └── content: 4 toggles (hitboxes, pointers, cameras crop areas, fps)
-    └── middleContainer (_gui_middle_container) "Plugins"
+    │   └── content: toggles — hitboxes, pointers, cameras crop areas, fps,
+    │       anchors, boundaries, angles, grid, screen center, pointer coords,
+    │       velocity vectors — plus a "cell size (px)" number input
+    ├── middleContainer (_gui_middle_container) "Plugins"
+    │   ├── title
+    │   └── content: one _gui_plugin row per registered plugin
+    └── thirdContainer (_gui_third_container) "Debug"
         ├── title
-        └── content: one _gui_plugin row per registered plugin
+        └── content: the _gui_stats engine readout
 ```
 
 Behavior:
@@ -69,22 +74,40 @@ Behavior:
 - **Collapse**: clicking `debugTab` toggles `debugContainer` between `flex` and
   `none`, flipping the chevron. `config.open_on_start` (default `false`) controls
   the initial open state — by default the panel starts closed
-  (`src/plugins/gui/gui.ts:68-82`).
-- **Rendering-option toggles** (`afterUpdate` handler, `src/plugins/gui/gui.ts:196-262`):
+  (`src/plugins/gui/gui.ts:121-126`).
+- **Rendering-option toggles** (`afterUpdate` handler, `src/plugins/gui/gui.ts:385`):
   each enabled toggle draws its overlay on top of the scene:
     - _hitboxes_ → `hitbox.draw()` for every `engineState.hitboxes` entry,
     - _pointers_ → `drawPointers()` (red 8×8 squares),
     - _cameras crop areas_ → `drawCropArea()` on every camera,
     - _fps_ → two text readouts top-right: real `FPS` (from `engineState.fps`) and
-      _Fixed FPS_ (from `1 / time.fixedDeltaTime`), with black outline + white fill.
-- **Auto enable/disable** (`checkToDisable`, `src/plugins/gui/gui.ts:166-177`):
-  the _hitboxes_ toggle is disabled when `engineState.hitboxes` is empty, and the
-  _cameras crop areas_ toggle when `engineState.cameras` is empty. Re-checked on
-  every `newPlugin` and every 2.5s (interval). Disabling unchecks the checkbox.
-- **Live plugin panel** (`on("newPlugin")`, `src/plugins/gui/gui.ts:187-190`):
+      _Fixed FPS_ (from `1 / time.fixedDeltaTime`), with black outline + white fill,
+    - _anchors_ → crosshair on every object/slider anchor,
+    - _boundaries_ → `strokeRect` of every object's x/y/width/height,
+    - _angles_ → a line from each object anchor along `element.angle`,
+    - _grid_ → a full-canvas grid with lines every `cell size (px)` px
+      (`numberConfig`, default 45, range `[8, 240]`); the input is disabled while
+      the grid toggle is off,
+    - _screen center_ → crosshair through the center of the canvas,
+    - _pointer coords_ → `(x, y)` text next to every active pointer,
+    - _velocity vectors_ → an arrow (with head) from each object anchor along
+      its `vel` magnitude (capped at 150px).
+- **Auto enable/disable** (`checkToDisable`, `src/plugins/gui/gui.ts:331`): the
+  _hitboxes_ toggle is disabled when `engineState.hitboxes` is empty, the
+  _cameras crop areas_ toggle when `engineState.cameras` is empty, and the
+  _"cell size (px)"_ input is disabled while the grid toggle is unchecked.
+  Re-checked on every `newPlugin` and every 2.5s (interval, `gui.ts:380`).
+  Disabling unchecks the checkbox.
+- **Persistent options**: every toggle, the grid cell size and the panel open
+  state live in `info.config` (seeded from `guiConfigDefaults` and merged with
+  anything saved earlier — `loadGuiConfig`, `gui.ts:42-57`). Any change is
+  written back to `info.config` and persisted to localStorage under
+  `lurkjs.gui.config` (`saveGuiConfig`, `gui.ts:312-337`), so a page refresh
+  restores the exact debug setup without re-entering test config.
+- **Live plugin panel** (`on("newPlugin")`, `src/plugins/gui/gui.ts:375`):
   re-renders the plugin list and re-runs `checkToDisable` whenever a new plugin
   registers, so the panel stays current without a page reload.
-- Exports a `gui` object of the DOM nodes/classes (`gui.ts:268-277`) for whoever
+- Exports a `gui` object of the DOM nodes/classes (`gui.ts:593-606`) for whoever
   wants to reach into it.
 
 ### Particles — `src/plugins/particles/particles.ts`

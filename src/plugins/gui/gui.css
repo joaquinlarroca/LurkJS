@@ -14,20 +14,25 @@ body {
     user-select: none;
     overflow-x: hidden;
     position: fixed;
+    left: 0;
     bottom: 0;
-    width: 100svw;
-    height: auto;
+    width: 100%;
+    max-width: 100svw;
     background-color: rgba(34, 34, 34, 0.95);
     color: #ffffff;
     font-family: "Fira Code", sans-serif;
-    font-size: 0.7em;
+    font-size: 0.85em;
+    border-radius: 0 8px 0 0;
+    border-top: #444444 1px solid;
+    border-right: #444444 1px solid;
+    box-shadow: 0 0 0.6rem rgba(0, 0, 0, 0.5);
 }
 
 ._gui_debug_tab {
-    width: calc(100% - 0.75rem);
+    box-sizing: border-box;
+    width: 100%;
     height: 1.25rem;
     background-color: rgba(34, 34, 34, 0.5);
-    border-top: #444444 1px solid;
     border-bottom: #444444 1px solid;
     display: flex;
     justify-content: space-between;
@@ -41,24 +46,34 @@ body {
     cursor: pointer;
 }
 
+._gui_debug_resize_handle {
+    height: 0.25rem;
+    cursor: ns-resize;
+    background-color: #444444;
+}
+
 ._gui_debug_container {
-    height: 25svh;
+    min-height: 2rem;
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: left;
+    justify-content: flex-start;
     align-items: flex-start;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: auto;
+    scrollbar-width: none;
 }
 
 ._gui_left_container {
     overflow: hidden;
-    width: calc(1 / 3 * 100%);
-    height: 100%;
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-start;
     border-right: #444444 1px solid;
 }
 
@@ -75,32 +90,63 @@ body {
 }
 
 ._gui_left_container_content {
-    overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: none;
     width: calc(100% - 1.5rem);
-    height: calc(100% - 1.25rem);
+    height: auto;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: flex-start;
     justify-content: flex-start;
     padding: 0.75em;
 }
 
 ._gui_left_container_content .toggle_button {
-    width: 100%;
+    box-sizing: border-box;
+    width: 50%;
     min-height: 1.25em;
     margin-bottom: 0.5em;
 }
 
+._gui_left_container_content .number_config {
+    box-sizing: border-box;
+    width: 50%;
+    min-height: 1.25em;
+    margin-bottom: 0.5em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5em;
+    padding-right: 0.75em;
+    color: #fff;
+}
+
+.number_config input {
+    width: 5em;
+    background: rgba(34, 34, 34, 0.8);
+    color: #d6ff9e;
+    border: #444444 1px solid;
+    border-radius: 4px;
+    padding: 0.1em 0.3em;
+}
+
+.number_config input:disabled {
+    color: #bbb;
+    cursor: not-allowed;
+}
+
 ._gui_middle_container {
     overflow: hidden;
-    width: calc(1 / 3 * 100%);
-    height: 100%;
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+    height: 34svh;
+    min-height: 34svh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-start;
     border-right: #444444 1px solid;
 }
 
@@ -117,34 +163,75 @@ body {
 }
 
 ._gui_middle_container_content {
-    overflow-y: auto;
     overflow-x: hidden;
-
-    width: calc(100% - 1.25rem);
-    height: calc(100% - 1.25rem);
+    overflow-y: auto;
+    scrollbar-width: none;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: calc(100% - 1.5rem);
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
     justify-content: flex-start;
     padding: 0.75em;
 }
 
+._gui_third_container {
+    overflow: hidden;
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+._gui_third_container_title {
+    color: #bbb;
+    width: calc(100% - 1.5rem);
+    min-height: 1.25rem;
+    background-color: rgba(34, 34, 34, 0.5);
+    border-bottom: #444444 1px solid;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 0.75em;
+}
+
+._gui_third_container_content {
+    overflow-x: hidden;
+    width: calc(100% - 1.5rem);
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0.75em;
+}
+
+._gui_stats {
+    width: 100%;
+    color: #ccc;
+    line-height: 1.5em;
+}
+
 ._gui_plugin {
-    overflow: visible;
-    width: 95%;
+    overflow: hidden;
+    width: 100%;
     background-color: rgba(34, 34, 34, 0.5);
     border-bottom: #444444 1px solid;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: center;
-    margin: 0 0.75em;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.35em;
 }
 
 ._gui_plugin_image {
     height: 1.5rem;
-    padding: 0.1rem;
+    padding: 0.2rem;
     pointer-events: none;
     aspect-ratio: 1 / 1;
 }
@@ -153,13 +240,14 @@ body {
     color: #ffffff;
     margin: 0 0.5rem;
     pointer-events: none;
+    font-size: 1em;
 }
 
 ._gui_plugin_description {
-    font-size: 1em;
+    font-size: 0.8em;
     color: #555;
     margin-left: 0.25rem;
     margin-right: 0.25rem;
-    margin-top: 0.25rem;
+    margin-top: 0.15rem;
     pointer-events: none;
 }

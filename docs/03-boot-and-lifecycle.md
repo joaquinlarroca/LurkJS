@@ -75,7 +75,7 @@ Every constructible has `destroy()` which sets `toDelete = true`:
 | Class                          | File                                   |
 | ------------------------------ | -------------------------------------- |
 | `entity` / `object`, `button`  | `src/js/classes/entity.ts:134-136`     |
-| `slider` / `sliderv` (_slider) | `src/js/classes/slider.ts:340-348`     |
+| `slider` / `sliderv` (_slider) | `src/js/classes/slider.ts:358-366`     |
 | `camera`                       | `src/js/classes/camera.ts:72-74`       |
 | `sound`, `multiSound`          | `src/js/classes/sound.ts:55-57, 96-98` |
 
@@ -96,7 +96,7 @@ So `destroy()` takes effect at the next frame boundary, not immediately.
 ### Special case: sliders
 
 `slider.destroy()` **also** removes both of its hitboxes (track + thumb) from
-`engineState.hitboxes` immediately (`src/js/classes/slider.ts:341-347`). This is
+`engineState.hitboxes` immediately (`src/js/classes/slider.ts:360-364`). This is
 because the thumb hitbox is owned by `this.thumb`, a plain object, not by the
 slider — the generic sweep would not match it. The track hitbox is owned by the
 slider (a doomed slider), so it would be caught anyway; both are spliced out
